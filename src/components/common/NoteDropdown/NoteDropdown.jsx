@@ -20,7 +20,7 @@ export const NoteDropdown = ({
     };
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col mt-8">
             <AriaSelect
               id={id}
               label={label}

@@ -25,7 +25,10 @@ import ChordList from "../../components/chord-list/ChordList.tsx";
 import ChordListItem from "../../components/chord-list/ChordListItem.tsx";
 
 const getSampleNotesFromDegrees = (intervals, rootNote = 'C') => {
-  return normalizeAccidentals(intervals.map(Note.transposeFrom(rootNote)));
+  if (!intervals?.length) {
+    return [];
+  }
+  return normalizeAccidentals(intervals?.map(Note.transposeFrom(rootNote)));
 }
 
 const onlyUniqueChords = (chords) => {
@@ -113,27 +116,6 @@ const TransformationEntry = ({
   )
 }
 
-const TransformationList = ({ transformations }) => {
-  return (
-    <List
-      sx={{
-        width: '100%',
-        maxWidth: 800,
-        bgColor: 'background.paper',
-        overflow: 'auto',
-        maxHeight: 400,
-        padding: '1px'
-      }}
-    >
-      {
-        transformations.map((transformation) => (
-          <TransformationEntry transformation={transformation} />
-        ))
-      }
-    </List>
-  )
-}
-
 export const NearbyChords = () => {
   const [root, setRoot] = useState('C');
   const [notes, setNotes] = useState(['C3', 'E3', 'G3']);
@@ -145,7 +127,7 @@ export const NearbyChords = () => {
   const degrees = notes?.length ? getScaleDegreePatternOfChord(notes, actualRoot) : [];
   const intervals = notes?.length ? getIntervallicPatternOfNotes(rootedNotes) : [];
 
-  const chords = getAllTransformations(chord.intervals, { ...chord, notes: rootedNotes, degrees, intervals });
+  const chords = getAllTransformations(chord?.intervals, { ...chord, notes: rootedNotes, degrees, intervals });
 
   const onKeyToggle = (id) => {
     if (notes.includes(id)) {
@@ -155,10 +137,18 @@ export const NearbyChords = () => {
     }
   }
 
+  console.log('Chord', chord);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-      <div className="flex flex-col justify-center items-center pb-4">
-        <ChordListItem name={chord.symbol} notes={chord.notes} startNotes={chord.notes} degrees={degrees}/>
+      <div className="flex flex-col justify-center items-center">
+        {
+          chord ? (
+            <ChordListItem name={chord?.symbol} notes={chord?.notes} startNotes={chord?.notes} degrees={degrees}/>
+          ) : (
+            <span>No valid chord found for the provided notes.</span>
+          )
+        }
         <NoteDropdown
           id="note-selection-for-voicing-sample"
           label="Root Note"
@@ -166,7 +156,7 @@ export const NearbyChords = () => {
           onNoteSelected={setRoot}
         />
       </div>
-      <span className="font-bold">Nearby Chords</span>
+      <span className="font-bold mt-8 ">Nearby Chords</span>
       <ChordList chords={chords} rootChord={chord} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
         <PianoKeyboard selectedKeys={notes} onKeyToggle={onKeyToggle} />

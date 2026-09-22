@@ -8,12 +8,12 @@ type ChordListItemProps = {
     startNotes?: string[],
 }
 
-const OverlapList = ({ notes = [], newNotes = []}) => {
+const OverlapList = ({ notes = [], startNotes = []}) => {
     return (
         <div className="flex justify-center items-center">
             {
-                notes.map((note) => (
-                    <span className={classNames('mx-1', { 'text-red-500': newNotes?.includes(note)} )}>{note}</span>
+                notes.map((note, index) => (
+                    <span className={classNames('mx-1', { 'text-red-500': startNotes[index] === note} )}>{note}</span>
                 ))
             }
         </div>
@@ -21,12 +21,11 @@ const OverlapList = ({ notes = [], newNotes = []}) => {
 }
 
 export const ChordListItem = ({ name, degrees = [], notes = [], startNotes = [] }: ChordListItemProps) => {
-    const diff = difference(notes, startNotes);
     return (
         <div className="p-4 m-2 flex flex-col justify-center items-center border border-solid rounded-sm">
             <span className="font-bold">{name}</span>
             <span>{degrees?.join(', ')}</span>
-            <OverlapList notes={notes} newNotes={diff} />
+            <OverlapList notes={notes} startNotes={startNotes} />
         </div>
     )
 }
