@@ -158,7 +158,7 @@ export const NearbyChords = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
       <div className="flex flex-col justify-center items-center pb-4">
-        <ChordListItem name={chord.symbol} notes={chord.notes} degrees={degrees}/>
+        <ChordListItem name={chord.symbol} notes={chord.notes} startNotes={chord.notes} degrees={degrees}/>
         <NoteDropdown
           id="note-selection-for-voicing-sample"
           label="Root Note"
@@ -167,7 +167,7 @@ export const NearbyChords = () => {
         />
       </div>
       <span className="font-bold">Nearby Chords</span>
-      <ChordList chords={chords} />
+      <ChordList chords={chords} rootChord={chord} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
         <PianoKeyboard selectedKeys={notes} onKeyToggle={onKeyToggle} />
       </div>
