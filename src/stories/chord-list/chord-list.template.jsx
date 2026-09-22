@@ -14,7 +14,6 @@ export const ChordListTemplate = () => {
   const chordNames = identifyPossibleChords(notesArr);
   const chords = chordNames.map((name) => Chord.get(name));
 
-  console.log('Chords', chords);
   const onKeyToggle = (id) => {
     if (notesArr.includes(id)) {
       setNotes(notesArr.filter((val) => val !== id));

@@ -4,7 +4,7 @@ import type { Chord } from "../../types/Chord.ts";
 
 export const ChordList = ({ chords = [] }) => {
     return (
-        <div className="p-4 m-2 grid grid-cols-4 gap-4">
+        <div className="p-4 m-2 grid grid-cols-4 gap-4 overflow-y-auto max-h-96">
             {
                 chords?.map((chord: Chord) => (
                     <ChordListItem
