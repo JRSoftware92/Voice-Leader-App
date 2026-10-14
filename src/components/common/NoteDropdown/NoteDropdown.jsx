@@ -7,7 +7,7 @@ import AriaSelect, {AriaSelectItem} from "../select.tsx";
 // import FormHelperText from '@mui/material/FormHelperText';
 // import Select from '@mui/material/Select';
 
-const NOTES = ['C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab', 'A', 'A#/Bb', 'B'];
+const NOTES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'];
 
 export const NoteDropdown = ({
     id = "note-dropdown",

@@ -1,4 +1,4 @@
-import {Interval, Note, Scale} from 'tonal';
+import {Interval, Note, Scale, Chord} from 'tonal';
 
 import range from 'lodash/range';
 import reduce from "lodash/reduce";
@@ -24,6 +24,43 @@ export const getScaleNamesByNotes = (notes = [], tonic = null, exact = false) =>
 
 export const getScaleInfoByName = (scaleName) => {
     return Scale.get(scaleName);
+}
+
+export const getScaleTriadsByNotes = (notes = []) => {
+  const len = notes.length;
+
+  return notes.map((root, i) => {
+    // Stack thirds: Root, 3rd (index + 2), 5th (index + 4)
+    const third = notes[(i + 2) % len];
+    const fifth = notes[(i + 4) % len];
+
+    // Detect the chord name from the accumulated notes
+    const detected = Chord.detect([root, third, fifth]);
+    return detected[0] || `${root} (unknown)`;
+  });
+}
+
+export const getScaleSeventhsByNotes = (notes = []) => {
+  const len = notes.length;
+
+  return notes.map((root, i) => {
+    // Stack thirds: Root, 3rd (index + 2), 5th (index + 4)
+    const third = notes[(i + 2) % len];
+    const fifth = notes[(i + 4) % len];
+    const seventh = notes[(i + 6) % len];
+
+    // Detect the chord name from the accumulated notes
+    const detected = Chord.detect([root, third, fifth, seventh]);
+    return detected[0] || `${root} (unknown)`;
+  });
+}
+
+export const getScaleChordsByNotes = (notes = [], useSevenths = false) => {
+  if (useSevenths) {
+    return getScaleSeventhsByNotes(notes);
+  } else {
+    return getScaleTriadsByNotes(notes);
+  }
 }
 
 export const getNoteToNumeralList = (rootNote, isMinor = false) => {
