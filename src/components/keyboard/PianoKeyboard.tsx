@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, {JSX, useMemo, useState} from "react";
 
 /**
  * PianoKeyboard
@@ -38,7 +38,7 @@ const NOTE_NAMES = [
 
 const TOTAL_KEYS = 37;
 
-function buildKeys(startOctave) {
+function buildKeys(startOctave: number) {
   const keys = [];
   for (let i = 0; i < TOTAL_KEYS; i++) {
     const noteIndex = i % 12;
@@ -55,11 +55,17 @@ function buildKeys(startOctave) {
   return keys;
 }
 
+type PianoKeyboardProps = {
+    selectedKeys: string[],
+    onKeyToggle: (selectedKey: string) => void,
+    startOctave?: number,
+}
+
 export default function PianoKeyboard({
-                                        selectedKeys,
-                                        onKeyToggle,
-                                        startOctave = 3,
-                                      }) {
+    selectedKeys,
+    onKeyToggle,
+    startOctave = 3,
+}: PianoKeyboardProps): JSX.Element {
   // If the parent doesn't pass `selectedKeys`, fall back to internal state
   // so the keyboard is still fully interactive with zero setup.
   const isControlled = selectedKeys !== undefined;
@@ -68,12 +74,12 @@ export default function PianoKeyboard({
 
   const keys = useMemo(() => buildKeys(startOctave), [startOctave]);
   const whiteKeys = keys.filter((k) => !k.isSharp);
-  const isSelected = (id) => activeSelected.includes(id);
+  const isSelected = (id: string) => activeSelected.includes(id);
 
-  const toggleKey = (id) => {
+  const toggleKey = (id: string) => {
     if (!isControlled) {
-      setInternalSelected((prev) =>
-        prev.includes(id) ? prev.filter((k) => k !== id) : [...prev, id]
+      setInternalSelected((prev: string[]) =>
+        prev.includes(id) ? prev.filter((k: string) => k !== id) : [...prev, id]
       );
     }
     if (onKeyToggle) onKeyToggle(id);

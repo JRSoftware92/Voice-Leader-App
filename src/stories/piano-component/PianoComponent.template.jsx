@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import PianoKeyboard from '../../components/keyboard/PianoKeyboard';
+import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 
 import {
   getIntervallicPatternOfNotes,

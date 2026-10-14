@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Chord } from "tonal";
 
-import PianoKeyboard from '../../components/keyboard/PianoKeyboard';
+import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 
 import {
   identifyPossibleChords

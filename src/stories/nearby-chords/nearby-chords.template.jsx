@@ -20,7 +20,7 @@ import {
 } from "../../voice-leading/identify-chords";
 
 import NoteDropdown from "../../components/common/NoteDropdown/NoteDropdown";
-import PianoKeyboard from "../../components/keyboard/PianoKeyboard.jsx";
+import PianoKeyboard from "../../components/keyboard/PianoKeyboard.tsx";
 import ChordList from "../../components/chord-list/ChordList.tsx";
 import ChordListItem from "../../components/chord-list/ChordListItem.tsx";
 
