@@ -14,6 +14,7 @@ type ScaleListItemProps = {
     degrees?: string[],
     notes?: string[],
     startNotes?: string[],
+    selected?: boolean,
 }
 
 const OverlapList = ({ notes = [], startNotes = []}) => {
@@ -28,7 +29,7 @@ const OverlapList = ({ notes = [], startNotes = []}) => {
     )
 }
 
-export const ScaleListItem = ({ name, scale, onClick, onDelete, notes = [], startNotes = [] }: ScaleListItemProps) => {
+export const ScaleListItem = ({ name, scale, onClick, onDelete, selected = false, notes = [], startNotes = [] }: ScaleListItemProps) => {
     const hasClickFunction = onClick !== undefined;
     const handleClick = () => {
         if (hasClickFunction) {
@@ -45,6 +46,7 @@ export const ScaleListItem = ({ name, scale, onClick, onDelete, notes = [], star
     return (
         <div className={classNames("p-2 m-1 flex flex-col justify-center items-center border border-solid rounded-sm", {
             'cursor-pointer': hasClickFunction,
+            'border-blue-400': selected,
         })} {...clickProps}>
             <div className="flex justify-between flex-row-reverse w-full">
                 {
