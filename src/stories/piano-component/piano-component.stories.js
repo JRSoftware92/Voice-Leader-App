@@ -24,5 +24,9 @@ export default {
 export const PianoComponentStory = {
   args: {
     // notes: ['C', 'E', 'G', 'B']
+    height: 160,
+    width: 900,
+    readonly: false,
+    hideLabels: false,
   },
 };

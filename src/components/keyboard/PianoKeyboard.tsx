@@ -1,36 +1,6 @@
 import React, {JSX, useMemo, useState} from "react";
 
-/**
- * PianoKeyboard
- * -------------
- * A 37-key piano keyboard (3 octaves + 1 note, C3 -> C6).
- *
- * This component supports two modes:
- *
- * 1. CONTROLLED (recommended) - pass `selectedKeys` (and, if you want to
- *    react to changes, `onKeyToggle`). The parent owns the array of
- *    selected notes and this component just reflects it.
- *
- *        <PianoKeyboard selectedKeys={keys} onKeyToggle={handleToggle} />
- *
- * 2. UNCONTROLLED (drop-in) - omit `selectedKeys` entirely. The component
- *    manages its own internal selection state, so clicking keys highlights
- *    them immediately with zero extra wiring. `onKeyToggle` is still
- *    called (if provided) so you can observe/log selections.
- *
- *        <PianoKeyboard />
- *
- * Props:
- *  - selectedKeys: string[] | undefined   array of currently selected note
- *                                          ids, e.g. ["C3", "D#3", "G4"].
- *                                          Omit to let the component manage
- *                                          its own state.
- *  - onKeyToggle:  (noteId) => void       called with a note id whenever a
- *                                          key is clicked
- *  - startOctave:  number                 optional, defaults to 3 (C3..C6)
- *
- * Styling: Tailwind CSS utility classes (no inline styles / style objects).
- */
+import { cn } from 'cn';
 
 const NOTE_NAMES = [
   "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
@@ -59,12 +29,20 @@ type PianoKeyboardProps = {
     selectedKeys: string[],
     onKeyToggle: (selectedKey: string) => void,
     startOctave?: number,
+    keyboardWidth?: number,
+    keyHeight?: number,
+    readonly?: boolean,
+    hideLabels?: boolean,
 }
 
 export default function PianoKeyboard({
     selectedKeys,
     onKeyToggle,
     startOctave = 3,
+    keyboardWidth = 900,
+    keyHeight = 160,
+    readonly = false,
+    hideLabels = false,
 }: PianoKeyboardProps): JSX.Element {
   // If the parent doesn't pass `selectedKeys`, fall back to internal state
   // so the keyboard is still fully interactive with zero setup.
@@ -86,11 +64,14 @@ export default function PianoKeyboard({
   };
 
   const handleClick = (id) => {
-    toggleKey(id);
+      if (readonly) {
+          return;
+      }
+      toggleKey(id);
   };
 
   const handleKeyDown = (e, id) => {
-    if (e.key === "Enter" || e.key === " ") {
+    if (!readonly && e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       toggleKey(id);
     }
@@ -112,19 +93,22 @@ export default function PianoKeyboard({
   const whiteKeyWidth = 100 / whiteKeys.length;
 
   return (
-    <div className="mx-auto box-border w-full min-w-[900px] rounded-xl bg-[#1B1D23] p-5">
-      <div className="mb-3.5 flex flex-wrap items-baseline justify-between gap-1.5">
-        <span className="text-[15px] font-semibold tracking-[0.2px] text-[#EDEEF0]">
-          Keyboard
-        </span>
-        <span className="max-w-[60%] text-right text-[13px] break-words text-[#8B8F98]">
-          {activeSelected.length > 0
-            ? activeSelected.join(", ")
-            : "no keys selected"}
-        </span>
-      </div>
-
-      <div className="relative flex h-[160px] w-full select-none">
+    <div className="mx-auto box-border w-full rounded-xl bg-[#1B1D23] p-5" style={{ width: keyboardWidth }}>
+        {
+            !hideLabels && (
+                <div className="mb-3.5 flex flex-wrap items-baseline justify-between gap-1.5">
+                    <span className="text-[15px] font-semibold tracking-[0.2px] text-[#EDEEF0]">
+                      Keyboard
+                    </span>
+                    <span className="max-w-[60%] text-right text-[13px] break-words text-[#8B8F98]">
+                      {activeSelected.length > 0
+                          ? activeSelected.join(", ")
+                          : "no keys selected"}
+                    </span>
+                </div>
+            )
+        }
+      <div className="relative flex w-full select-none" style={{ height: keyHeight }}>
         {whiteKeys.map((k) => {
           const selected = isSelected(k.id);
           return (
@@ -137,13 +121,13 @@ export default function PianoKeyboard({
               onClick={() => handleClick(k.id)}
               onKeyDown={(e) => handleKeyDown(e, k.id)}
               style={{ width: `${whiteKeyWidth}%` }}
-              className={`relative box-border flex h-full cursor-pointer items-end justify-center rounded-b-md border pb-2 transition-colors duration-75 ease-out ${
+              className={cn(`relative box-border flex h-full items-end justify-center rounded-b-md border pb-2 transition-colors duration-75 ease-out ${
                 selected
                   ? "border-[#3E7CB1] bg-[#3E7CB1]"
                   : "border-[#B8BAC0] bg-[#F7F6F3]"
-              }`}
+              }`, { 'cursor-pointer': !readonly })}
             >
-              {k.name === "C" && (
+              {k.name === "C" && !hideLabels && (
                 <span className="pointer-events-none text-[11px] text-[#9A9CA3]">
                   C{k.octave}
                 </span>
@@ -168,9 +152,9 @@ export default function PianoKeyboard({
                 left: `${k.offset * whiteKeyWidth}%`,
                 width: `${whiteKeyWidth * 0.62}%`,
               }}
-              className={`absolute top-0 z-[2] box-border h-[62%] rounded-b border border-black transition-colors duration-75 ease-out ${
+              className={cn(`absolute top-0 z-[2] box-border h-[62%] rounded-b border border-black transition-colors duration-75 ease-out ${
                 selected ? "bg-[#3E7CB1]" : "bg-[#202127]"
-              }`}
+              }`, { 'cursor-pointer': !readonly })}
             />
           );
         })}

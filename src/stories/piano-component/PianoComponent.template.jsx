@@ -8,7 +8,7 @@ import {
   identifyPossibleChords
 } from "../../voice-leading/identify-chords";
 
-export const IdentifyChordsByNotes = () => {
+export const IdentifyChordsByNotes = ({ width, height, readonly, hideLabels }) => {
   const [notesArr, setNotes] = useState(['C3', 'E3', 'G3', 'B3']);
 
   const chords = identifyPossibleChords(notesArr);
@@ -32,7 +32,14 @@ export const IdentifyChordsByNotes = () => {
       <span>{chords.join(', ')}</span>
       <span>{distanceStr}</span>
       <span>{intervalStr}</span>
-      <PianoKeyboard onKeyToggle={onKeyToggle} selectedKeys={notesArr} />
+      <PianoKeyboard
+        onKeyToggle={onKeyToggle}
+        selectedKeys={notesArr}
+        keyboardWidth={width}
+        keyHeight={height}
+        readonly={readonly}
+        hideLabels={hideLabels}
+      />
     </div>
   )
 }
