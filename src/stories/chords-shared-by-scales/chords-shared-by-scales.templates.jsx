@@ -42,9 +42,16 @@ export const ScaleListTemplate = () => {
     }
   }
 
+  const handleScaleDelete = (scale) => {
+    if (selectedScale?.name === scale.name) {
+      setSelectedScale(null);
+    }
+    setScales(scales.filter(({ name }) => name !== scale.name))
+  }
+
   return (
     <div className="flex flex-col items-center w-full">
-      <ScaleList scales={scales} startNotes={[]} onClick={handleScaleClick} />
+      <ScaleList scales={scales} startNotes={[]} onClick={handleScaleClick} onDelete={handleScaleDelete}/>
       <ChordList chords={chords} scale={selectedScale}/>
       <SelectScaleByNotes notes={notesArr} onAccept={onScaleSelected} open={open} setOpen={setOpen} />
       <PianoKeyboard selectedKeys={notesArr} onKeyToggle={onKeyToggle} />

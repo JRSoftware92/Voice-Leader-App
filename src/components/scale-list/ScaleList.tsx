@@ -2,7 +2,7 @@ import type { Scale } from "../../types/Scale.ts";
 
 import ScaleListItem from "./ScaleListItem.tsx";
 
-export const ScaleList = ({ onClick, scales = [], startNotes = [] }) => {
+export const ScaleList = ({ onClick, onDelete, scales = [], startNotes = [] }) => {
     return (
         <div className="p-4 m-2 grid grid-cols-4 gap-4 overflow-y-auto max-h-96">
             {
@@ -14,6 +14,7 @@ export const ScaleList = ({ onClick, scales = [], startNotes = [] }) => {
                         notes={scale.notes}
                         startNotes={startNotes}
                         onClick={onClick}
+                        onDelete={onDelete}
                     />
                 ))
             }
