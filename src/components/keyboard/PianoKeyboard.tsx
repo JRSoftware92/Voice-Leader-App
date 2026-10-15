@@ -6,11 +6,9 @@ const NOTE_NAMES = [
   "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
 ];
 
-const TOTAL_KEYS = 37;
-
-function buildKeys(startOctave: number) {
+function buildKeys(startOctave: number, totalKeys) {
   const keys = [];
-  for (let i = 0; i < TOTAL_KEYS; i++) {
+  for (let i = 0; i < totalKeys; i++) {
     const noteIndex = i % 12;
     const octave = startOctave + Math.floor(i / 12);
     const name = NOTE_NAMES[noteIndex];
@@ -31,6 +29,7 @@ type PianoKeyboardProps = {
     startOctave?: number,
     keyboardWidth?: number,
     keyHeight?: number,
+    numberOfOctaves?: number,
     readonly?: boolean,
     hideLabels?: boolean,
 }
@@ -39,18 +38,20 @@ export default function PianoKeyboard({
     selectedKeys,
     onKeyToggle,
     startOctave = 3,
+    numberOfOctaves = 3,
     keyboardWidth = 900,
     keyHeight = 160,
     readonly = false,
     hideLabels = false,
 }: PianoKeyboardProps): JSX.Element {
-  // If the parent doesn't pass `selectedKeys`, fall back to internal state
+    const TOTAL_KEYS = numberOfOctaves > 0 ? (numberOfOctaves * 12) + 1 : 0;
+    // If the parent doesn't pass `selectedKeys`, fall back to internal state
   // so the keyboard is still fully interactive with zero setup.
   const isControlled = selectedKeys !== undefined;
   const [internalSelected, setInternalSelected] = useState([]);
   const activeSelected = isControlled ? selectedKeys : internalSelected;
 
-  const keys = useMemo(() => buildKeys(startOctave), [startOctave]);
+  const keys = useMemo(() => buildKeys(startOctave, TOTAL_KEYS), [startOctave, TOTAL_KEYS]);
   const whiteKeys = keys.filter((k) => !k.isSharp);
   const isSelected = (id: string) => activeSelected.includes(id);
 

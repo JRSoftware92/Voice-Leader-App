@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Note } from "tonal";
 
 import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 
@@ -8,7 +9,7 @@ import {
   identifyPossibleChords
 } from "../../voice-leading/identify-chords";
 
-export const IdentifyChordsByNotes = ({ width, height, readonly, hideLabels }) => {
+export const IdentifyChordsByNotes = ({ width, height, readonly, hideLabels, numberOfOctaves }) => {
   const [notesArr, setNotes] = useState(['C3', 'E3', 'G3', 'B3']);
 
   const chords = identifyPossibleChords(notesArr);
@@ -23,7 +24,9 @@ export const IdentifyChordsByNotes = ({ width, height, readonly, hideLabels }) =
     if (notesArr.includes(id)) {
       setNotes(notesArr.filter((val) => val !== id));
     } else {
-      setNotes([...notesArr, id]);
+      const newNotes = [...notesArr, id];
+      const sortedNotes = newNotes.sort((a, b) => Note.midi(a) - Note.midi(b));
+      setNotes(sortedNotes);
     }
   }
 
@@ -39,6 +42,7 @@ export const IdentifyChordsByNotes = ({ width, height, readonly, hideLabels }) =
         keyHeight={height}
         readonly={readonly}
         hideLabels={hideLabels}
+        numberOfOctaves={numberOfOctaves}
       />
     </div>
   )

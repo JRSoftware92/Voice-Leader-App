@@ -28,5 +28,6 @@ export const PianoComponentStory = {
     width: 900,
     readonly: false,
     hideLabels: false,
+    numberOfOctaves: 3,
   },
 };
