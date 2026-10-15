@@ -8,6 +8,8 @@ import type { Scale } from "../../types/Scale.ts";
 
 import { getCircleOfFifthColorForNote } from '../../utils/colors';
 
+import NoteList from "../note-list/NoteList.tsx";
+
 type ScaleListItemProps = {
     name: string,
     scale: Scale,
@@ -19,19 +21,13 @@ type ScaleListItemProps = {
     selected?: boolean,
 }
 
-const OverlapList = ({ notes = [], startNotes = []}) => {
+const OverlapList = ({ notes = [] }) => {
     return (
-        <div className="flex justify-center items-center">
-            {
-                notes.map((note, index) => (
-                    <span className={classNames('mx-1', { 'text-red-500': startNotes[index] === note} )}>{note}</span>
-                ))
-            }
-        </div>
+        <NoteList notes={notes} />
     )
 }
 
-export const ScaleListItem = ({ name, scale, onClick, onDelete, selected = false, notes = [], startNotes = [] }: ScaleListItemProps) => {
+export const ScaleListItem = ({ name, scale, onClick, onDelete, selected = false, notes = [] }: ScaleListItemProps) => {
     const hasClickFunction = onClick !== undefined;
     const handleClick = () => {
         if (hasClickFunction) {
@@ -54,7 +50,13 @@ export const ScaleListItem = ({ name, scale, onClick, onDelete, selected = false
             'cursor-pointer': hasClickFunction,
             'border-blue-400': selected,
         })} {...clickProps}>
-            <div className="flex justify-between flex-row-reverse w-full">
+            <div className="flex justify-between w-full">
+                <span
+                    className="m-1 py-1 px-1.5 text-xs rounded font-bold"
+                    style={{ color: tonicColor, backgroundColor: `${tonicColor}10`, borderColor: `${tonicColor}30` }}
+                >
+                    {tonic}
+                </span>
                 {
                     onDelete ? (
                         <Button variant="destructive" onClick={handleDelete}>
@@ -63,8 +65,8 @@ export const ScaleListItem = ({ name, scale, onClick, onDelete, selected = false
                     ) : null
                 }
             </div>
-            <span className="font-bold" style={{ color: tonicColor }}>{name}</span>
-            <OverlapList notes={notes} startNotes={startNotes} />
+            <span className="font-bold">{name}</span>
+            <OverlapList notes={scale?.notes || notes} />
         </div>
     )
 }

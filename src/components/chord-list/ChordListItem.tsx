@@ -7,6 +7,7 @@ import type {Chord} from "../../types/Chord.ts";
 
 import {Button} from "../ui/button.tsx";
 import { getCircleOfFifthColorForNote } from '../../utils/colors';
+import NoteList from "../note-list/NoteList.tsx";
 
 
 type ChordListItemProps = {
@@ -22,15 +23,9 @@ type ChordListItemProps = {
     rootScale?: Scale | undefined,
 }
 
-const OverlapList = ({ notes = [], startNotes = []}) => {
+const OverlapList = ({ notes = [] }) => {
     return (
-        <div className="mt-1 flex justify-center items-center">
-            {
-                notes.map((note, index) => (
-                    <span className={classNames('mx-1 text-xs', { 'text-red-500': startNotes[index] === note} )}>{note}</span>
-                ))
-            }
-        </div>
+        <NoteList notes={notes} />
     )
 }
 
@@ -57,9 +52,22 @@ export const ChordListItem = ({ chord, name, scaleDegree, onClick, onDelete, sel
             'cursor-pointer': hasClickFunction,
             'border-blue-400': selected,
         })} {...clickProps}>
-            <div className={classNames("flex justify-between flex-row-reverse w-full", {
+            <div className={classNames("flex justify-between w-full", {
                 'm-2': !scaleDegree
             })}>
+                <div className="flex justify-start">
+                    <span
+                        className="m-1 py-1 px-1.5 text-xs rounded font-bold"
+                        style={{ color: tonicColor, backgroundColor: `${tonicColor}10`, borderColor: `${tonicColor}30` }}
+                    >
+                        {tonic}
+                    </span>
+                    {
+                        scaleDegree ? (
+                            <span className="m-1 py-1 px-1.5 text-xs border border-gray-200 bg-gray-100 text-gray-700 rounded">{scaleDegree}</span>
+                        ) : null
+                    }
+                </div>
                 {
                     onDelete ? (
                         <Button variant="destructive" onClick={handleDelete}>
@@ -67,15 +75,10 @@ export const ChordListItem = ({ chord, name, scaleDegree, onClick, onDelete, sel
                         </Button>
                     ) : null
                 }
-                {
-                    scaleDegree ? (
-                        <span className="m-1 py-1 px-1.5 text-xs border border-gray-200 bg-gray-100 text-gray-700 rounded">{scaleDegree}</span>
-                    ) : null
-                }
             </div>
-            <span className="font-bold" style={{ color: tonicColor }}>{name}</span>
+            <span className="font-bold">{name}</span>
             <span>{degrees?.join(', ')}</span>
-            <OverlapList notes={notes} startNotes={startNotes} />
+            <OverlapList notes={notes} />
         </div>
     )
 }
