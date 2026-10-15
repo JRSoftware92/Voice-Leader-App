@@ -1,22 +1,32 @@
 import React, { useState } from 'react';
-import { Chord } from "tonal";
 
 import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 
-import {
-  identifyPossibleChords
-} from "../../voice-leading/identify-chords";
-import ChordList from "../../components/chord-list/ChordList.tsx";
 import {generateAllVoicingTransformations} from "../../voice-leading/chord-transformations.js";
 import ChordTransformationList from "../../components/common/ChordTransformationList/ChordTransformationList.tsx";
+import SelectChordByNotes from "../../components/modals/SelectChordByNotes/SelectChordByNotes.tsx";
+
+// Keyboard and root key specification on bottom
+// List panels on top:
+// Bass Swaps (Rootless Voicings),
+// Nearby Chords (Valid Voice Leading Transforms),
+// Leading Dominants and Target dominants (resolved from [V to I], or moving to [ii to V]) (either a fifth or a fourth away)
+
+// extended into tritone territory: bII7 – I or ii – bII7 (always a half step away)
+// extended to backdoor dominants: bVII7 - I or iv7 - bVII7 (either a step or a perfect fourth away)
+// Show relative scale degrees of chords to the original source key/chord
+
+// For bass swaps - prioritize in order: (Half step and step, third and minor third, fifth and fourth)
+// For nearby chords - stick to half step and stepwise transformations at the top, then branch out further down the list
+//  - Favor thirds, fourths, fifths as per the bass swap ordering
+
 
 export const ChordTransformationsTemplate = () => {
   const [notesArr, setNotes] = useState(['C3', 'E3', 'G3', 'B3']);
+  const [selectedChord, setChord] = useState(null);
+  const [open, setOpen] = useState(false);
 
-  const chordNames = identifyPossibleChords(notesArr);
-  const chords = chordNames.map((name) => Chord.get(name));
-  const chordZero = chords?.length ? chords[0] : null;
-  const transforms = chordZero ? generateAllVoicingTransformations(0, notesArr, chordZero) : [];
+  const transforms = selectedChord ? generateAllVoicingTransformations(0, notesArr, selectedChord) : [];
 
   console.log('Transforms', transforms);
 
@@ -28,9 +38,14 @@ export const ChordTransformationsTemplate = () => {
     }
   }
 
+  const onAccept = (chord) => {
+    setChord(chord);
+    setOpen(false);
+  }
+
   return (
     <div className="flex flex-col items-center w-full">
-      <ChordList chords={chords} />
+      <SelectChordByNotes notes={notesArr} open={open} setOpen={setOpen} onAccept={onAccept} />
       <ChordTransformationList transformations={transforms} />
       <PianoKeyboard selectedKeys={notesArr} onKeyToggle={onKeyToggle} />
     </div>

@@ -1,5 +1,6 @@
 // This file contains utility functions for identifying chords based on a set of notes
-import { Note, Chord, Interval } from 'tonal';
+import { Note, Chord, Interval, transpose } from 'tonal';
+
 
 export const identifyChordByNotes = (notes = []) => {
     try {
@@ -13,6 +14,10 @@ export const identifyChordByNotes = (notes = []) => {
 
 export const identifyPossibleChords = (notes = []) => {
     return Chord.detect(notes);
+}
+
+export const deriveChordFromRootAndDegrees = (rootNote = "C4", intervals = []) => {
+  return identifyChordByNotes(intervals.map(interval => transpose(root, interval)));
 }
 
 export const getChordByTonicAndType = (tonicNote, chordType) => getChordInfoByName(`${tonicNote}${chordType}`);
