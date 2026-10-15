@@ -2,25 +2,22 @@ import classNames from "classnames";
 
 import {Trash2} from "lucide-react";
 
-import type {Scale} from "../../types/Scale.ts";
 import type {Chord} from "../../types/Chord.ts";
 
 import {Button} from "../ui/button.tsx";
 import { getCircleOfFifthColorForNote } from '../../utils/colors';
 import NoteList from "../note-list/NoteList.tsx";
+import {getScaleDegreePatternOfChord} from "../../voice-leading/identify-chords";
 
 
 type ChordListItemProps = {
     chord: Chord,
-    name: string,
+    scaleTonic?: string,
     selected?: boolean,
     onClick?: (chord: Chord) => void,
     onDelete?: (chord: Chord) => void,
     scaleDegree?: string,
     degrees?: string[],
-    notes?: string[],
-    startNotes?: string[], // TODO - deprecate - use root scale instead, treat chords as root scale
-    rootScale?: Scale | undefined,
 }
 
 const OverlapList = ({ notes = [] }) => {
@@ -29,7 +26,7 @@ const OverlapList = ({ notes = [] }) => {
     )
 }
 
-export const ChordListItem = ({ chord, name, scaleDegree, onClick, onDelete, selected = false, degrees = [], notes = [], startNotes = [] }: ChordListItemProps) => {
+export const ChordListItem = ({ chord, scaleDegree, scaleTonic, onClick, onDelete, selected = false }: ChordListItemProps) => {
     const hasClickFunction = onClick !== undefined;
     const handleClick = () => {
         if (hasClickFunction) {
@@ -44,8 +41,10 @@ export const ChordListItem = ({ chord, name, scaleDegree, onClick, onDelete, sel
         }
     }
 
-    const tonic = chord?.tonic.replace(/\d/g, '');
+    const tonic = chord?.tonic ? chord.tonic.replace(/\d/g, '') : null;
     const tonicColor = getCircleOfFifthColorForNote(tonic);
+
+    const degrees = tonic ? getScaleDegreePatternOfChord(chord.notes, scaleTonic || tonic) : [];
 
     return (
         <div className={classNames("pb-4 mb-2 flex flex-col justify-center items-center border border-solid rounded-sm", {
@@ -76,9 +75,9 @@ export const ChordListItem = ({ chord, name, scaleDegree, onClick, onDelete, sel
                     ) : null
                 }
             </div>
-            <span className="font-bold">{name}</span>
+            <span className="font-bold">{chord.symbol}</span>
             <span>{degrees?.join(', ')}</span>
-            <OverlapList notes={notes} />
+            <OverlapList notes={chord.notes} />
         </div>
     )
 }

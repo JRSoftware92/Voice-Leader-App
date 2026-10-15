@@ -47,7 +47,7 @@ export const ChordTransformationsTemplate = () => {
     <div className="flex flex-col items-center w-full">
       <SelectChordByNotes notes={notesArr} open={open} setOpen={setOpen} onAccept={onAccept} />
       <ChordTransformationList transformations={transforms} />
-      <PianoKeyboard selectedKeys={notesArr} onKeyToggle={onKeyToggle} />
+      <PianoKeyboard selectedKeys={notesArr} onKeyToggle={onKeyToggle} hideLabels />
     </div>
   )
 }

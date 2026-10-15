@@ -11,7 +11,6 @@ type ChordListProps = {
     selectedChordSymbol?: string,
     onClick?: (chord: Chord) => void,
     onDelete?: (chord: Chord) => void,
-    rootChord?: Chord,
     scale?: ScaleType | undefined,
     chords?: Chord[],
 }
@@ -28,8 +27,7 @@ const addScaleDegreeToChord = (chord: Chord, tonic: string): ChordWithScaleDegre
     })
 }
 
-export const ChordList = ({ rootChord, scale, selectedChordSymbol, onClick, onDelete, chords = [] }: ChordListProps) => {
-    const startNotes = rootChord?.notes || [];
+export const ChordList = ({ scale, selectedChordSymbol, onClick, onDelete, chords = [] }: ChordListProps) => {
     const tonicNote: string | undefined = scale?.tonic;
     const chordsWithScaleDegrees: ChordWithScaleDegrees[] = useMemo(() => {
         if (!tonicNote) {
@@ -43,14 +41,11 @@ export const ChordList = ({ rootChord, scale, selectedChordSymbol, onClick, onDe
             {
                 chordsWithScaleDegrees?.map((chord: ChordWithScaleDegrees) => (
                     <ChordListItem
+                        key={chord.symbol}
                         chord={chord}
                         selected={chord.symbol === selectedChordSymbol}
-                        key={chord.symbol}
-                        name={chord.symbol}
-                        degrees={chord.degrees}
-                        notes={chord.notes}
                         scaleDegree={chord.romanDegree}
-                        startNotes={startNotes}
+                        scaleTonic={tonicNote}
                         onClick={onClick}
                         onDelete={onDelete}
                     />

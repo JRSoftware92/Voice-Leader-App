@@ -124,10 +124,10 @@ export const NearbyChords = () => {
   const rootedNotes = [actualRoot, ...notes];
   const chordName = identifyChordByNotes(normalizeAccidentals(rootedNotes));
   const chord = getChordInfoByName(chordName);
-  const degrees = notes?.length ? getScaleDegreePatternOfChord(notes, actualRoot) : [];
   const intervals = notes?.length ? getIntervallicPatternOfNotes(rootedNotes) : [];
 
-  const chords = getAllTransformations(chord?.intervals, { ...chord, notes: rootedNotes, degrees, intervals });
+  console.log('Chrd', chord)
+  const chords = getAllTransformations(chord?.intervals, { ...chord, notes: rootedNotes, intervals });
 
   const onKeyToggle = (id) => {
     if (notes.includes(id)) {
@@ -137,14 +137,13 @@ export const NearbyChords = () => {
     }
   }
 
-  console.log('Chord', chord);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
       <div className="flex flex-col justify-center items-center">
         {
           chord ? (
-            <ChordListItem name={chord?.symbol} notes={chord?.notes} startNotes={chord?.notes} degrees={degrees}/>
+            <ChordListItem key={chord?.symbol} chord={chord} />
           ) : (
             <span>No valid chord found for the provided notes.</span>
           )
