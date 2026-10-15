@@ -1,4 +1,4 @@
-import {Interval, Note, Scale, Chord} from 'tonal';
+import {Interval, Note, Scale, Chord, RomanNumeral} from 'tonal';
 
 import range from 'lodash/range';
 import reduce from "lodash/reduce";
@@ -80,6 +80,13 @@ export const getRelativeScaleDegree = (tonic, targetNote)=> {
   const accidental = convertIntervalToScaleAlteration(interval);
 
   return `${accidental}${degreeNumber}`;
+}
+
+export const getRomanScaleDegree = (tonic, targetNote)=> {
+  const intervalName = Interval.distance(tonic, targetNote);
+  const interval = Interval.get(intervalName);
+
+  return RomanNumeral.get(interval).name;
 }
 
 export const getNoteToNumeralList = (rootNote, isMinor = false) => {

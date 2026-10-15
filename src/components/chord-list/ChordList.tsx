@@ -1,30 +1,27 @@
 import { useMemo } from 'react';
 
-import { Interval } from 'tonal';
-
 import ChordListItem from "./ChordListItem.tsx";
 
 import type { Chord } from "../../types/Chord.ts";
-import type { Scale } from "../../types/Scale.ts";
+import type { Scale as ScaleType } from "../../types/Scale.ts";
 
-import { getRelativeScaleDegree } from "../../voice-leading/identify-scales";
+import { getRomanScaleDegree } from "../../voice-leading/identify-scales";
 
 type ChordListProps = {
     rootChord?: Chord,
-    scale?: Scale | undefined,
+    scale?: ScaleType | undefined,
     chords?: Chord[],
 }
 
 type ChordWithScaleDegrees = Chord & {
-    relativeScaleDegree: number,
+    romanDegree: string,
 }
 
 const addScaleDegreeToChord = (chord: Chord, tonic: string): ChordWithScaleDegrees[] => {
     const chordRoot = chord.tonic;
-    const scaleDegree = getRelativeScaleDegree(tonic, chordRoot);
     return ({
         ...chord,
-        relativeScaleDegree: scaleDegree
+        romanDegree: getRomanScaleDegree(tonic, chordRoot),
     })
 }
 
@@ -37,6 +34,7 @@ export const ChordList = ({ rootChord, scale, chords = [] }: ChordListProps) => 
         }
         return chords.map((chord) => addScaleDegreeToChord(chord, tonicNote));
     }, [tonicNote, chords])
+
     return (
         <div className="p-4 m-2 grid grid-cols-4 gap-4 overflow-y-auto max-h-96">
             {
@@ -46,7 +44,7 @@ export const ChordList = ({ rootChord, scale, chords = [] }: ChordListProps) => 
                         name={chord.symbol}
                         degrees={chord.degrees}
                         notes={chord.notes}
-                        scaleDegree={chord.relativeScaleDegree}
+                        scaleDegree={chord.romanDegree}
                         startNotes={startNotes}
                     />
                 ))
