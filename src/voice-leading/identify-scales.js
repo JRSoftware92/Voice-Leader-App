@@ -63,6 +63,25 @@ export const getScaleChordsByNotes = (notes = [], useSevenths = false) => {
   }
 }
 
+const convertIntervalToScaleAlteration = (interval) => {
+  if (interval.q === "m" || interval.q === "d") {
+    return "b".repeat(Math.abs(interval.alt)); // Lowered degree
+  } else if (interval.q === "A") {
+    return "#".repeat(interval.alt); // Raised degree
+  }
+  return ''
+}
+
+export const getRelativeScaleDegree = (tonic, targetNote)=> {
+  const intervalName = Interval.distance(tonic, targetNote);
+  const interval = Interval.get(intervalName);
+
+  const degreeNumber = interval.num;
+  const accidental = convertIntervalToScaleAlteration(interval);
+
+  return `${accidental}${degreeNumber}`;
+}
+
 export const getNoteToNumeralList = (rootNote, isMinor = false) => {
     const numNotes = range(0, 12);
     const romanNumerals = isMinor ? ALL_MINOR_NUMERALS : ALL_MAJOR_NUMERALS;

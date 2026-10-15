@@ -6,7 +6,7 @@ const NOTE_NAMES = [
   "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
 ];
 
-function buildKeys(startOctave: number, totalKeys) {
+function buildKeys(startOctave: number, totalKeys: number) {
   const keys = [];
   for (let i = 0; i < totalKeys; i++) {
     const noteIndex = i % 12;
