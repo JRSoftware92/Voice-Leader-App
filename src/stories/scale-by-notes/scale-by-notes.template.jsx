@@ -31,7 +31,7 @@ export const ScaleListTemplate = () => {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <ScaleList scales={scales} startNotes={notesArr} />
+      <ScaleList scales={scales} startNotes={notesArr} onClick={(scale) => console.log('Clicked', scale)} />
       <PianoKeyboard selectedKeys={notesArr} onKeyToggle={onKeyToggle} />
     </div>
   )

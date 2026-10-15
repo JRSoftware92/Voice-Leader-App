@@ -24,7 +24,7 @@ export const ChordListTemplate = () => {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <ChordList chords={chords} />
+      <ChordList chords={chords} onClick={(chord) => console.log('Clicked', chord)}/>
       <PianoKeyboard selectedKeys={notesArr} onKeyToggle={onKeyToggle} />
     </div>
   )

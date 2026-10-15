@@ -1,9 +1,12 @@
 import classNames from "classnames";
 
 import type {Scale} from "../../types/Scale.ts";
+import type {Chord} from "../../types/Chord.ts";
 
 type ChordListItemProps = {
+    chord: Chord,
     name: string,
+    onClick?: (chord: Chord) => void,
     scaleDegree?: string,
     degrees?: string[],
     notes?: string[],
@@ -23,9 +26,18 @@ const OverlapList = ({ notes = [], startNotes = []}) => {
     )
 }
 
-export const ChordListItem = ({ name, scaleDegree, degrees = [], notes = [], startNotes = [] }: ChordListItemProps) => {
+export const ChordListItem = ({ chord, name, scaleDegree, onClick, degrees = [], notes = [], startNotes = [] }: ChordListItemProps) => {
+    const hasClickFunction = onClick !== undefined;
+    const handleClick = () => {
+        if (hasClickFunction) {
+            onClick(chord);
+        }
+    }
+    const clickProps = hasClickFunction ? { onClick: handleClick } : {};
     return (
-        <div className="pb-4 mb-2 flex flex-col justify-center items-center border border-solid rounded-sm">
+        <div className={classNames("pb-4 mb-2 flex flex-col justify-center items-center border border-solid rounded-sm", {
+            'cursor-pointer': hasClickFunction,
+        })} {...clickProps}>
             <div className={classNames("flex justify-between flex-row-reverse w-full", {
                 'm-2': !scaleDegree
             })}>
