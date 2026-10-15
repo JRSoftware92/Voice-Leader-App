@@ -6,6 +6,8 @@ import { Button } from '../ui/button.tsx';
 
 import type { Scale } from "../../types/Scale.ts";
 
+import { getCircleOfFifthColorForNote } from '../../utils/colors';
+
 type ScaleListItemProps = {
     name: string,
     scale: Scale,
@@ -43,6 +45,10 @@ export const ScaleListItem = ({ name, scale, onClick, onDelete, selected = false
             onDelete(scale);
         }
     }
+
+    const tonic = scale?.tonic.replace(/\d/g, '');
+    const tonicColor = getCircleOfFifthColorForNote(tonic);
+
     return (
         <div className={classNames("p-2 m-1 flex flex-col justify-center items-center border border-solid rounded-sm", {
             'cursor-pointer': hasClickFunction,
@@ -57,7 +63,7 @@ export const ScaleListItem = ({ name, scale, onClick, onDelete, selected = false
                     ) : null
                 }
             </div>
-            <span className="font-bold">{name}</span>
+            <span className="font-bold" style={{ color: tonicColor }}>{name}</span>
             <OverlapList notes={notes} startNotes={startNotes} />
         </div>
     )

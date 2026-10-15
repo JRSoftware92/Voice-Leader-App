@@ -1,9 +1,13 @@
 import classNames from "classnames";
 
+import {Trash2} from "lucide-react";
+
 import type {Scale} from "../../types/Scale.ts";
 import type {Chord} from "../../types/Chord.ts";
+
 import {Button} from "../ui/button.tsx";
-import {Trash2} from "lucide-react";
+import { getCircleOfFifthColorForNote } from '../../utils/colors';
+
 
 type ChordListItemProps = {
     chord: Chord,
@@ -45,6 +49,9 @@ export const ChordListItem = ({ chord, name, scaleDegree, onClick, onDelete, sel
         }
     }
 
+    const tonic = chord?.tonic.replace(/\d/g, '');
+    const tonicColor = getCircleOfFifthColorForNote(tonic);
+
     return (
         <div className={classNames("pb-4 mb-2 flex flex-col justify-center items-center border border-solid rounded-sm", {
             'cursor-pointer': hasClickFunction,
@@ -66,7 +73,7 @@ export const ChordListItem = ({ chord, name, scaleDegree, onClick, onDelete, sel
                     ) : null
                 }
             </div>
-            <span className="font-bold">{name}</span>
+            <span className="font-bold" style={{ color: tonicColor }}>{name}</span>
             <span>{degrees?.join(', ')}</span>
             <OverlapList notes={notes} startNotes={startNotes} />
         </div>
