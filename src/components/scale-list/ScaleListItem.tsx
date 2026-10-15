@@ -1,5 +1,9 @@
 import classNames from "classnames";
 
+import { Trash2 } from "lucide-react"
+
+import { Button } from '../ui/button.tsx';
+
 import type { Scale } from "../../types/Scale.ts";
 
 type ScaleListItemProps = {
@@ -39,13 +43,15 @@ export const ScaleListItem = ({ name, scale, onClick, onDelete, notes = [], star
         }
     }
     return (
-        <div className={classNames("p-4 m-2 flex flex-col justify-center items-center border border-solid rounded-sm", {
+        <div className={classNames("p-2 m-1 flex flex-col justify-center items-center border border-solid rounded-sm", {
             'cursor-pointer': hasClickFunction,
         })} {...clickProps}>
             <div className="flex justify-between flex-row-reverse w-full">
                 {
                     onDelete ? (
-                        <button className="p-2" onClick={handleDelete}>X</button>
+                        <Button variant="destructive" onClick={handleDelete}>
+                            <Trash2 className="h-2 w-2" />
+                        </Button>
                     ) : null
                 }
             </div>
