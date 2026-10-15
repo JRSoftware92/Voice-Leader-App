@@ -26,8 +26,14 @@ const OverlapList = ({ notes = [], startNotes = []}) => {
 export const ChordListItem = ({ name, scaleDegree, degrees = [], notes = [], startNotes = [] }: ChordListItemProps) => {
     return (
         <div className="pb-4 mb-2 flex flex-col justify-center items-center border border-solid rounded-sm">
-            <div className="flex justify-between flex-row-reverse w-full">
-                <span className="m-1 py-1 px-1.5 text-xs border border-gray-200 bg-gray-100 text-gray-700 rounded">{scaleDegree}</span>
+            <div className={classNames("flex justify-between flex-row-reverse w-full", {
+                'm-2': !scaleDegree
+            })}>
+                {
+                    scaleDegree ? (
+                        <span className="m-1 py-1 px-1.5 text-xs border border-gray-200 bg-gray-100 text-gray-700 rounded">{scaleDegree}</span>
+                    ) : null
+                }
             </div>
             <span className="font-bold">{name}</span>
             <span>{degrees?.join(', ')}</span>
