@@ -8,7 +8,9 @@ import type { Scale as ScaleType } from "../../types/Scale.ts";
 import { getRomanScaleDegree } from "../../voice-leading/identify-scales";
 
 type ChordListProps = {
+    selectedChordSymbol?: string,
     onClick?: (chord: Chord) => void,
+    onDelete?: (chord: Chord) => void,
     rootChord?: Chord,
     scale?: ScaleType | undefined,
     chords?: Chord[],
@@ -26,7 +28,7 @@ const addScaleDegreeToChord = (chord: Chord, tonic: string): ChordWithScaleDegre
     })
 }
 
-export const ChordList = ({ rootChord, scale, onClick, chords = [] }: ChordListProps) => {
+export const ChordList = ({ rootChord, scale, selectedChordSymbol, onClick, onDelete, chords = [] }: ChordListProps) => {
     const startNotes = rootChord?.notes || [];
     const tonicNote: string | undefined = scale?.tonic;
     const chordsWithScaleDegrees: ChordWithScaleDegrees[] = useMemo(() => {
@@ -42,6 +44,7 @@ export const ChordList = ({ rootChord, scale, onClick, chords = [] }: ChordListP
                 chordsWithScaleDegrees?.map((chord: ChordWithScaleDegrees) => (
                     <ChordListItem
                         chord={chord}
+                        selected={chord.symbol === selectedChordSymbol}
                         key={chord.symbol}
                         name={chord.symbol}
                         degrees={chord.degrees}
@@ -49,6 +52,7 @@ export const ChordList = ({ rootChord, scale, onClick, chords = [] }: ChordListP
                         scaleDegree={chord.romanDegree}
                         startNotes={startNotes}
                         onClick={onClick}
+                        onDelete={onDelete}
                     />
                 ))
             }

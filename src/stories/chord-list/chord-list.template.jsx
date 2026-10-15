@@ -10,6 +10,7 @@ import ChordList from "../../components/chord-list/ChordList.tsx";
 
 export const ChordListTemplate = () => {
   const [notesArr, setNotes] = useState(['C3', 'E3', 'G3', 'B3']);
+  const [selectedChord, setSelectedChord] = useState(null);
 
   const chordNames = identifyPossibleChords(notesArr);
   const chords = chordNames.map((name) => Chord.get(name));
@@ -22,9 +23,22 @@ export const ChordListTemplate = () => {
     }
   }
 
+  const handleChordClick = (chord) => {
+    if (selectedChord?.symbol !== chord.symbol) {
+      setSelectedChord(chord);
+    } else {
+      setSelectedChord(null);
+    }
+  }
+
   return (
     <div className="flex flex-col items-center w-full">
-      <ChordList chords={chords} onClick={(chord) => console.log('Clicked', chord)}/>
+      <ChordList
+        chords={chords}
+        selectedChordSymbol={selectedChord?.symbol}
+        onClick={handleChordClick}
+        onDelete={(chord) => console.log('Delete', chord)}
+      />
       <PianoKeyboard selectedKeys={notesArr} onKeyToggle={onKeyToggle} />
     </div>
   )
