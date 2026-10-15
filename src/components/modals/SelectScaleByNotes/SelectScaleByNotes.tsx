@@ -21,8 +21,6 @@ import {
     getScaleChordsByNotes,
 } from "../../../voice-leading/identify-scales.js";
 
-import PianoKeyboard from '../../keyboard/PianoKeyboard';
-
 export interface SelectionItem {
     id: string
     label: string
@@ -30,7 +28,7 @@ export interface SelectionItem {
 }
 
 interface ListSelectionDialogProps {
-    items: SelectionItem[]
+    notes: string[]
     open: boolean,
     setOpen: (open: boolean) => void,
     title?: string
@@ -41,7 +39,8 @@ interface ListSelectionDialogProps {
 }
 
 export const ScaleSelectionModal = ({
-    onAccept,
+    notes,
+                                        onAccept,
     open = false,
     setOpen = () => {},
     title = "Pick a Scale",
@@ -49,22 +48,13 @@ export const ScaleSelectionModal = ({
     triggerButtonText = "Open Scale List",
 }: ListSelectionDialogProps) => {
     const [selectedId, setSelectedId] = React.useState<string | undefined>(undefined)
-    const [notesArr, setNotes] = React.useState<string[]>([]);
 
-    const scaleNames = getScaleNamesByNotes(notesArr);
+    const scaleNames = getScaleNamesByNotes(notes);
     const scales = scaleNames.map((name: string) => getScaleInfoByName(name));
     const scalesWithChords = scales.map((scale: Scale) => ({
         ...scale,
         chords: getScaleChordsByNotes(scale.notes, true),
     }))
-
-    const onKeyToggle = (id: string) => {
-        if (notesArr.includes(id)) {
-            setNotes(notesArr.filter((val) => val !== id));
-        } else {
-            setNotes([...notesArr, id]);
-        }
-    }
 
     const handleCancel = () => {
         setOpen(false)
@@ -121,7 +111,6 @@ export const ScaleSelectionModal = ({
                         })}
                     </div>
                 </ScrollArea>
-                <PianoKeyboard selectedKeys={notesArr} onKeyToggle={onKeyToggle} />
 
                 {/* Action Buttons */}
                 <DialogFooter className="sm:justify-end gap-2 pt-2 border-t">
