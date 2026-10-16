@@ -357,7 +357,7 @@ export const generateAllHalfStepParallelMovements = (notes, originalChord = {}) 
             relativeIntervals: intervals,
             prevChordInfo: {
                 ...originalChord,
-                relativeIntervals: getIntervallicPatternOfNotes(originalChord.notes),
+                relativeIntervals: getIntervallicPatternOfNotes(notes),
                 notes: normalizeAccidentals(notes),
             },
         }
@@ -381,7 +381,7 @@ export const generateAllHalfStepParallelMovements = (notes, originalChord = {}) 
             relativeIntervals: intervals,
             prevChordInfo: {
                 ...originalChord,
-                relativeIntervals: getIntervallicPatternOfNotes(originalChord.notes),
+                relativeIntervals: getIntervallicPatternOfNotes(notes),
                 notes: normalizeAccidentals(notes),
             },
         }
@@ -412,7 +412,7 @@ export const generateAllHalfStepContraryMovements = (notes, originalChord = {}) 
             relativeIntervals: intervals,
             prevChordInfo: {
                 ...originalChord,
-                relativeIntervals: getIntervallicPatternOfNotes(originalChord.notes),
+                relativeIntervals: getIntervallicPatternOfNotes(notes),
                 notes: normalizeAccidentals(notes),
             },
         }
@@ -437,7 +437,7 @@ export const generateAllHalfStepContraryMovements = (notes, originalChord = {}) 
             relativeIntervals: intervals,
             prevChordInfo: {
                 ...originalChord,
-                relativeIntervals: getIntervallicPatternOfNotes(originalChord.notes),
+                relativeIntervals: getIntervallicPatternOfNotes(notes),
                 notes: normalizeAccidentals(notes),
             },
         }

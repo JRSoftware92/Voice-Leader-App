@@ -126,8 +126,8 @@ export const generateSingleNoteTransformations = (chord: Chord, notesArr = []) =
             relativeIntervals: intervals,
             prevChordInfo: {
                 ...chord,
-                relativeIntervals: getIntervallicPatternOfNotes(chordNotes),
-                notes: normalizeAccidentals(chordNotes),
+                relativeIntervals: getIntervallicPatternOfNotes(notes),
+                notes: normalizeAccidentals(notes),
             },
         }
     })
