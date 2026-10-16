@@ -5,7 +5,6 @@ import { Note, Chord, Interval, transpose } from 'tonal';
 export const identifyChordByNotes = (notes = []) => {
     try {
         const detected = Chord.detect(notes);
-        console.log('Detected for', notes, detected)
         return detected?.length ? detected[0] : null;
     }
     catch(e) {

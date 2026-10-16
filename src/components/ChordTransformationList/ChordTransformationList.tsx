@@ -1,3 +1,5 @@
+import { cn } from "cn"
+
 import { ScrollArea } from "../ui/scroll-area.tsx";
 import { Separator } from "../ui/separator.tsx";
 
@@ -12,11 +14,15 @@ const MiniKeyboard = ({ notes = [] }) => {
     )
 }
 
-const TransformationItem = ({ item }) => {
+const TransformationItem = ({ item, onClick }) => {
+    const handleClick = () => onClick(item);
     return (
         <li
             key={item.chord}
-            className="flex px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground items-center"
+            className={cn("flex px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground items-center", {
+                "cursor-pointer": !!onClick !== undefined,
+            })}
+            onClick={handleClick}
         >
             <span className="my-2 ml-2 mr-8 p-4 min-w-1/4 font-bold text-2xl border rounded flex items-center justify-center" style={{
                 backgroundColor: `${getCircleOfFifthColorForNote(item.tonic)}20`,
@@ -45,7 +51,7 @@ const TransformationItem = ({ item }) => {
 }
 
 export const ChordTransformationList = ({
-    transformations = [],
+    transformations = [], onClick,
 }) => {
     const sortedTransformations = transformations.sort((a, b) => {
         return a.distance - b.distance;
@@ -76,7 +82,7 @@ export const ChordTransformationList = ({
                         </h4>
                         <ul className="space-y-1">
                             {groupItems.map((item) => (
-                                <TransformationItem key={item.symbol} item={item} />
+                                <TransformationItem key={item.symbol} item={item} onClick={onClick} />
                             ))}
                         </ul>
                         {index < Object.entries(groupedTransformations).length - 1 && (

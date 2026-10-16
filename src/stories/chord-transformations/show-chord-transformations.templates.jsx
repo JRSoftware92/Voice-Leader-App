@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import {Note} from "tonal";
 
 import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 
@@ -9,7 +10,8 @@ import {
 import ChordTransformationList from "../../components/ChordTransformationList/ChordTransformationList.tsx";
 import SelectChordByNotes from "../../components/modals/SelectChordByNotes/SelectChordByNotes.tsx";
 import {generateRootlessTransformations, generateSingleNoteTransformations} from "../../utils/transformation-utils.ts";
-import {Note} from "tonal";
+import {playChord} from "../../utils/music.js";
+import {PolySynth, start} from "tone";
 
 // Keyboard and root key specification on bottom
 // List panels on top:
@@ -31,6 +33,8 @@ export const ChordTransformationsTemplate = () => {
   const [selectedChord, setChord] = useState(null);
   const [open, setOpen] = useState(false);
 
+  const synth = new PolySynth().toDestination();
+
   // const transforms = selectedChord ? generateAllVoicingTransformations(0, notesArr, selectedChord) : [];
   const rootless = selectedChord ? generateRootlessTransformations(selectedChord, notesArr) : [];
   const oblique = selectedChord ? generateSingleNoteTransformations(selectedChord, notesArr) : [];
@@ -48,6 +52,10 @@ export const ChordTransformationsTemplate = () => {
     }
   }
 
+  const onTransformationClick = async (transformation) => {
+    playChord(synth, transformation.prevChordInfo.notes).then(() => playChord(synth, transformation.notes));
+  }
+
   const onAccept = (chord) => {
     setChord(chord);
     setOpen(false);
@@ -56,7 +64,7 @@ export const ChordTransformationsTemplate = () => {
   return (
     <div className="flex flex-col items-center w-full">
       <SelectChordByNotes notes={notesArr} open={open} setOpen={setOpen} onAccept={onAccept} />
-      <ChordTransformationList transformations={transforms} />
+      <ChordTransformationList transformations={transforms} onClick={onTransformationClick} />
       <PianoKeyboard selectedKeys={notesArr} onKeyToggle={onKeyToggle} hideLabels />
     </div>
   )

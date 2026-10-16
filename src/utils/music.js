@@ -1,9 +1,12 @@
-import { PolySynth, start } from "tone";
+import { getContext, start, Time } from "tone";
 
-export const playChord = async (notes = [], duration = '2n') => {
-  const synth = new PolySynth().toDestination();
-
-  await start();
-
-  synth.triggerAttackRelease(notes, duration);
+export const playChord = (synth, notes = [], duration = '2n') => {
+  start().then(() => {
+    synth.triggerAttackRelease(notes, duration);
+  })
+  return new Promise((resolve) => {
+    getContext().setTimeout(() => {
+      resolve();
+    }, Time(duration).toSeconds());
+  });
 }
