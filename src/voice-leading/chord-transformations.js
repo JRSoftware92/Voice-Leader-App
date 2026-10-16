@@ -339,7 +339,7 @@ export const generateRootlessTransformations = (chord) => {
 export const generateAllHalfStepParallelMovements = (notes, originalChord = {}) => {
     const indexPairs = getAllIndexPairingsWithinARange(0, notes.length);
     const movementsUp = indexPairs.map((interval) => {
-        const newNotes = moveIntervalByXSemitones(interval[0], interval[1], 1, notes)
+        const newNotes = [...new Set(moveIntervalByXSemitones(interval[0], interval[1], 1, notes))]
         const chordName = identifyChordByNotes(newNotes);
         const chordInfo = getChordInfoByName(chordName);
         const degrees = chordInfo ? getScaleDegreePatternOfChord(newNotes, chordInfo.tonic) : null;
@@ -351,6 +351,7 @@ export const generateAllHalfStepParallelMovements = (notes, originalChord = {}) 
             group: 'parallel-motion',
             notes: newNotes,
             chord: chordName,
+            distance: 2,
             originalInterval: interval,
             degrees,
             relativeIntervals: intervals,
@@ -362,7 +363,7 @@ export const generateAllHalfStepParallelMovements = (notes, originalChord = {}) 
         }
     });
     const movementsDown = indexPairs.map((interval) => {
-        const newNotes = moveIntervalByXSemitones(interval[0], interval[1], -1, notes)
+        const newNotes = [...new Set(moveIntervalByXSemitones(interval[0], interval[1], -1, notes))]
         const chordName = identifyChordByNotes(newNotes);
         const chordInfo = getChordInfoByName(chordName);
         const degrees = chordInfo ? getScaleDegreePatternOfChord(newNotes, chordInfo.tonic) : null;
@@ -374,7 +375,8 @@ export const generateAllHalfStepParallelMovements = (notes, originalChord = {}) 
             group: 'parallel-motion',
             notes: newNotes,
             chord: chordName,
-            originalInterval: interval,
+          distance: 2,
+          originalInterval: interval,
             degrees,
             relativeIntervals: intervals,
             prevChordInfo: {
@@ -391,7 +393,7 @@ export const generateAllHalfStepParallelMovements = (notes, originalChord = {}) 
 export const generateAllHalfStepContraryMovements = (notes, originalChord = {}) => {
     const indexPairs = getAllIndexPairingsWithinARange(0, notes.length);
     const movementsIn = indexPairs.map((interval) => {
-        const newNotes = moveIntervalInByXSemitones(interval[0], interval[1], 1, notes)
+        const newNotes = [...new Set(moveIntervalInByXSemitones(interval[0], interval[1], 1, notes))]
         const chordName = identifyChordByNotes(newNotes);
         const chordInfo = getChordInfoByName(chordName);
         const degrees = chordInfo ? getScaleDegreePatternOfChord(newNotes, chordInfo.tonic) : null;
@@ -404,7 +406,8 @@ export const generateAllHalfStepContraryMovements = (notes, originalChord = {}) 
             group: 'contrary-motion',
             notes: newNotes,
             chord: chordName,
-            originalInterval: interval,
+          distance: 2,
+          originalInterval: interval,
             degrees,
             relativeIntervals: intervals,
             prevChordInfo: {
@@ -415,7 +418,7 @@ export const generateAllHalfStepContraryMovements = (notes, originalChord = {}) 
         }
     });
     const movementsOut = indexPairs.map((interval) => {
-        const newNotes = moveIntervalOutByXSemitones(interval[0], interval[1], 1, notes)
+        const newNotes = [...new Set(moveIntervalOutByXSemitones(interval[0], interval[1], 1, notes))]
         const chordName = identifyChordByNotes(newNotes);
         const chordInfo = getChordInfoByName(chordName);
         const degrees = chordInfo ? getScaleDegreePatternOfChord(newNotes, chordInfo.tonic) : null;
@@ -428,7 +431,8 @@ export const generateAllHalfStepContraryMovements = (notes, originalChord = {}) 
             group: 'contrary-motion',
             notes: newNotes,
             chord: chordName,
-            originalInterval: interval,
+          distance: 2,
+          originalInterval: interval,
             degrees,
             relativeIntervals: intervals,
             prevChordInfo: {

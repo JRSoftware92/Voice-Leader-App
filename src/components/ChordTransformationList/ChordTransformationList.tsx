@@ -2,7 +2,6 @@ import { ScrollArea } from "../ui/scroll-area.tsx";
 import { Separator } from "../ui/separator.tsx";
 
 import NoteList from "../note-list/NoteList.tsx";
-import {getDistanceBetweenTonicNotes} from "../../voice-leading/identify-chords";
 
 const TransformationItem = ({ item }) => {
     return (

@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 
 import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 
-import {generateAllVoicingTransformations} from "../../voice-leading/chord-transformations.js";
+import {
+  generateAllHalfStepContraryMovements,
+  generateAllHalfStepParallelMovements,
+  generateAllVoicingTransformations
+} from "../../voice-leading/chord-transformations.js";
 import ChordTransformationList from "../../components/ChordTransformationList/ChordTransformationList.tsx";
 import SelectChordByNotes from "../../components/modals/SelectChordByNotes/SelectChordByNotes.tsx";
 import {generateRootlessTransformations, generateSingleNoteTransformations} from "../../utils/transformation-utils.ts";
@@ -22,6 +26,7 @@ import {generateRootlessTransformations, generateSingleNoteTransformations} from
 //  - Favor thirds, fourths, fifths as per the bass swap ordering
 
 
+// TODO - Fix Notes List and Arrays => Showing Duplicate notes OR notes in wrong order
 export const ChordTransformationsTemplate = () => {
   const [notesArr, setNotes] = useState(['C3', 'E3', 'G3', 'B3']);
   const [selectedChord, setChord] = useState(null);
@@ -30,7 +35,9 @@ export const ChordTransformationsTemplate = () => {
   // const transforms = selectedChord ? generateAllVoicingTransformations(0, notesArr, selectedChord) : [];
   const rootless = selectedChord ? generateRootlessTransformations(selectedChord, notesArr) : [];
   const oblique = selectedChord ? generateSingleNoteTransformations(selectedChord, notesArr) : [];
-  const transforms = [...rootless, ...oblique];
+  const halfStepParallel = selectedChord ? generateAllHalfStepParallelMovements(notesArr, selectedChord) : [];
+  const halfStepContrary = selectedChord ? generateAllHalfStepContraryMovements(notesArr, selectedChord) : [];
+  const transforms = [...rootless, ...oblique, ...halfStepParallel, ...halfStepContrary];
 
   const onKeyToggle = (id) => {
     if (notesArr.includes(id)) {
