@@ -16,7 +16,11 @@ const TransformationItem = ({ item }) => {
                 <span className="text-xs text-gray-700">
                     {item.label}
                 </span>
-                <NoteList notes={item.notes} />
+                <div className="flex justify-between items-center">
+                    <NoteList notes={item.prevChordInfo.notes} />
+                    <span>{'--->'}</span>
+                    <NoteList notes={item.notes} />
+                </div>
             </div>
         </li>
     )
@@ -33,6 +37,8 @@ export const ChordTransformationList = ({
         acc[item.group].push(item);
         return acc;
     }, {} as Record<string, object[]>);
+
+    console.log(transformations)
 
     return (
         <ScrollArea className="h-[420px] w-2/3 rounded-md border p-4">
