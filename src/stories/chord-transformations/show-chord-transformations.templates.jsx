@@ -10,6 +10,7 @@ import {
 import ChordTransformationList from "../../components/ChordTransformationList/ChordTransformationList.tsx";
 import SelectChordByNotes from "../../components/modals/SelectChordByNotes/SelectChordByNotes.tsx";
 import {generateRootlessTransformations, generateSingleNoteTransformations} from "../../utils/transformation-utils.ts";
+import {Note} from "tonal";
 
 // Keyboard and root key specification on bottom
 // List panels on top:
@@ -39,12 +40,19 @@ export const ChordTransformationsTemplate = () => {
   const halfStepContrary = selectedChord ? generateAllHalfStepContraryMovements(notesArr, selectedChord) : [];
   const transforms = [...rootless, ...oblique, ...halfStepParallel, ...halfStepContrary];
 
+  console.groupCollapsed('Template Render');
+  console.log('Entered Notes', notesArr);
+  console.log('Selected Chord', selectedChord);
+  console.log('Transformations', transforms)
+  console.groupEnd();
+
   const onKeyToggle = (id) => {
     if (notesArr.includes(id)) {
       setNotes(notesArr.filter((val) => val !== id));
     } else {
-      setNotes([...notesArr, id]);
-    }
+      const newNotes = [...notesArr, id];
+      const sortedNotes = newNotes.sort((a, b) => Note.midi(a) - Note.midi(b));
+      setNotes(sortedNotes);    }
   }
 
   const onAccept = (chord) => {
