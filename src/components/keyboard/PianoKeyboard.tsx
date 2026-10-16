@@ -1,6 +1,7 @@
 import React, {JSX, useMemo, useState} from "react";
 
 import { cn } from 'cn';
+import { Note } from 'tonal'
 
 const NOTE_NAMES = [
   "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
@@ -53,7 +54,9 @@ export default function PianoKeyboard({
 
   const keys = useMemo(() => buildKeys(startOctave, TOTAL_KEYS), [startOctave, TOTAL_KEYS]);
   const whiteKeys = keys.filter((k) => !k.isSharp);
-  const isSelected = (id: string) => activeSelected.includes(id);
+  const isSelected = (id: string) => {
+      return activeSelected.findIndex((note) => Note.midi(note) === Note.midi(id)) > -1;
+  }
 
   const toggleKey = (id: string) => {
     if (!isControlled) {
@@ -140,6 +143,9 @@ export default function PianoKeyboard({
         {blackKeyPositions.map((k) => {
           if (!k) return null;
           const selected = isSelected(k.id);
+
+          console.log('ActiveSelected', activeSelected)
+          console.log('Selected key', selected,k.id);
           return (
             <div
               key={k.id}
