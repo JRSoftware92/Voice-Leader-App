@@ -8,6 +8,7 @@ import {
   getScaleDegreePatternOfChord,
   identifyPossibleChords
 } from "../../voice-leading/identify-chords";
+import {playChord} from "../../utils/music.js";
 
 export const IdentifyChordsByNotes = ({ width, height, readonly, hideLabels, numberOfOctaves }) => {
   const [notesArr, setNotes] = useState(['C3', 'E3', 'G3', 'B3']);
@@ -30,11 +31,14 @@ export const IdentifyChordsByNotes = ({ width, height, readonly, hideLabels, num
     }
   }
 
+  const onPlayChord = () => playChord(notesArr);
+
   return (
     <div className="flex flex-col items-center w-full">
       <span>{chords.join(', ')}</span>
       <span>{distanceStr}</span>
       <span>{intervalStr}</span>
+      <button onClick={onPlayChord}>play</button>
       <PianoKeyboard
         onKeyToggle={onKeyToggle}
         selectedKeys={notesArr}
