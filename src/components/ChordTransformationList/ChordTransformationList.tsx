@@ -33,6 +33,11 @@ const TransformationItem = ({ item }) => {
                     <span>{'--->'}</span>
                     <NoteList notes={item.notes} />
                 </div>
+                <div className="flex justify-between items-center mb-2">
+                    <span>{item.prevChordInfo.relativeIntervals.join(' | ')}</span>
+                    <span>{'--->'}</span>
+                    <span>{item.relativeIntervals.join(' | ')}</span>
+                </div>
                 <MiniKeyboard notes={item.notes || []} />
             </div>
         </li>
