@@ -2,18 +2,32 @@ import { ScrollArea } from "../ui/scroll-area.tsx";
 import { Separator } from "../ui/separator.tsx";
 
 import NoteList from "../note-list/NoteList.tsx";
+import PianoKeyboard from "../keyboard/PianoKeyboard.tsx";
+
+import { getCircleOfFifthColorForNote } from '../../utils/colors';
+
+const MiniKeyboard = ({ notes = [] }) => {
+    console.log('Key notes', notes)
+    return (
+        <PianoKeyboard selectedKeys={notes} startOctave={2} keyboardWidth={320} keyHeight={64} readonly hideLabels/>
+    )
+}
 
 const TransformationItem = ({ item }) => {
+    console.log('Item', item)
     return (
         <li
             key={item.chord}
             className="flex px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground items-center"
         >
-            <span className="m-1 p-1 min-w-1/4 font-bold">
+            <span className="my-2 ml-2 mr-8 p-4 min-w-1/4 font-bold text-2xl border rounded flex items-center justify-center" style={{
+                backgroundColor: `${getCircleOfFifthColorForNote(item.tonic)}20`,
+                borderColor: `${getCircleOfFifthColorForNote(item.tonic)}50`,
+            }}>
                 {item.chord}
             </span>
             <div className="flex flex-col">
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-gray-600 wrap-break-word">
                     {item.label}
                 </span>
                 <div className="flex justify-between items-center">
@@ -21,6 +35,7 @@ const TransformationItem = ({ item }) => {
                     <span>{'--->'}</span>
                     <NoteList notes={item.notes} />
                 </div>
+                <MiniKeyboard notes={item.notes || []} />
             </div>
         </li>
     )

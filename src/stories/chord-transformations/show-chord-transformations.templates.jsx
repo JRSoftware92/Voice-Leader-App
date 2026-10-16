@@ -5,7 +5,6 @@ import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 import {
   generateAllHalfStepContraryMovements,
   generateAllHalfStepParallelMovements,
-  generateAllVoicingTransformations
 } from "../../voice-leading/chord-transformations.js";
 import ChordTransformationList from "../../components/ChordTransformationList/ChordTransformationList.tsx";
 import SelectChordByNotes from "../../components/modals/SelectChordByNotes/SelectChordByNotes.tsx";
@@ -27,7 +26,6 @@ import {Note} from "tonal";
 //  - Favor thirds, fourths, fifths as per the bass swap ordering
 
 
-// TODO - Fix Notes List and Arrays => Showing Duplicate notes OR notes in wrong order
 export const ChordTransformationsTemplate = () => {
   const [notesArr, setNotes] = useState(['C3', 'E3', 'G3', 'B3']);
   const [selectedChord, setChord] = useState(null);
@@ -40,19 +38,14 @@ export const ChordTransformationsTemplate = () => {
   const halfStepContrary = selectedChord ? generateAllHalfStepContraryMovements(notesArr, selectedChord) : [];
   const transforms = [...rootless, ...oblique, ...halfStepParallel, ...halfStepContrary];
 
-  console.groupCollapsed('Template Render');
-  console.log('Entered Notes', notesArr);
-  console.log('Selected Chord', selectedChord);
-  console.log('Transformations', transforms)
-  console.groupEnd();
-
   const onKeyToggle = (id) => {
     if (notesArr.includes(id)) {
       setNotes(notesArr.filter((val) => val !== id));
     } else {
       const newNotes = [...notesArr, id];
       const sortedNotes = newNotes.sort((a, b) => Note.midi(a) - Note.midi(b));
-      setNotes(sortedNotes);    }
+      setNotes(sortedNotes);
+    }
   }
 
   const onAccept = (chord) => {
