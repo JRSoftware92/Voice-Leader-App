@@ -9,11 +9,11 @@ const TransformationItem = ({ item }) => {
             key={item.chord}
             className="flex px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground items-center"
         >
-            <span className="m-1 p-1 min-w-1/4 text-bold">
+            <span className="m-1 p-1 min-w-1/4 font-bold">
                 {item.chord}
             </span>
             <div className="flex flex-col">
-                <span className="text-xs text-gray-700">
+                <span className="text-sm text-gray-600">
                     {item.label}
                 </span>
                 <div className="flex justify-between items-center">
