@@ -5,7 +5,7 @@ import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 import {generateAllVoicingTransformations} from "../../voice-leading/chord-transformations.js";
 import ChordTransformationList from "../../components/ChordTransformationList/ChordTransformationList.tsx";
 import SelectChordByNotes from "../../components/modals/SelectChordByNotes/SelectChordByNotes.tsx";
-import {generateRootlessTransformations} from "../../utils/transformation-utils.ts";
+import {generateRootlessTransformations, generateSingleNoteTransformations} from "../../utils/transformation-utils.ts";
 
 // Keyboard and root key specification on bottom
 // List panels on top:
@@ -28,7 +28,9 @@ export const ChordTransformationsTemplate = () => {
   const [open, setOpen] = useState(false);
 
   // const transforms = selectedChord ? generateAllVoicingTransformations(0, notesArr, selectedChord) : [];
-  const transforms = selectedChord ? generateRootlessTransformations(selectedChord, notesArr) : [];
+  const rootless = selectedChord ? generateRootlessTransformations(selectedChord, notesArr) : [];
+  const oblique = selectedChord ? generateSingleNoteTransformations(selectedChord, notesArr) : [];
+  const transforms = [...rootless, ...oblique];
 
   const onKeyToggle = (id) => {
     if (notesArr.includes(id)) {

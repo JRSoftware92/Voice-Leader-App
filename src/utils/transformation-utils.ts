@@ -35,10 +35,6 @@ export const generateRootlessTransformations = (chord: Chord, notesArr = []) => 
         return newArr;
     })
 
-    console.groupCollapsed('Transformation Function');
-    console.log('chord', chord)
-    console.log('Rootless Bass Bounds', lowerBoundNote, upperBoundNote)
-    console.groupEnd();
     return newNoteSets.map((notes) => {
         const chordName = identifyChordByNotes(notes);
         const chordInfo = getChordInfoByName(chordName);
@@ -58,16 +54,71 @@ export const generateRootlessTransformations = (chord: Chord, notesArr = []) => 
             const direction = distance > 0 ? 'Up' : 'Down';
             label = `Move Bass of ${chord?.symbol} ${absoluteDistance} Semitone(s) ${direction}`;
         }
-        console.groupCollapsed('New Chord with root', notes[0]);
-        console.log('chord', chordInfo);
-        console.log('Distance', distance);
-        console.log('Index', indexInOriginalChord)
-        console.groupEnd();
         return {
             ...chordInfo,
             quality: getChordQualityFromInfo(chordInfo),
             label,
             group: 'swap-bass',
+            notes,
+            chord: chordName,
+            degrees,
+            distance: absoluteDistance,
+            relativeIntervals: intervals,
+            prevChordInfo: {
+                ...chord,
+                relativeIntervals: getIntervallicPatternOfNotes(chordNotes),
+                notes: normalizeAccidentals(chordNotes),
+            },
+        }
+    })
+}
+
+export const generateReplacementNoteSets = (notes = []) => {
+    const output = []
+    for (let i = 1; i < notes.length - 1; i++) {
+        const lowerBound = Note.transpose(notes[i - 1], Interval.fromSemitones(1));
+        const upperBound = Note.transpose(notes[i + 1], Interval.fromSemitones(-1));
+        output.push(Range.chromatic([lowerBound, upperBound]).filter((note) => note !== notes[i]));
+    }
+
+    return output;
+}
+
+// Changes a single, non root note according to best practices in voice leading (no crossing over notes in the chord)
+export const generateSingleNoteTransformations = (chord: Chord, notesArr = []) => {
+    const chordNotes = notesArr || chord?.notes;
+    const replacementNoteSets = generateReplacementNoteSets(chordNotes);
+    const newChordObjects = replacementNoteSets.flatMap((noteSet, setIndex) => {
+        const targetNoteIndex = setIndex + 1;
+        const outputChords = [];
+        for (let i = 0; i < noteSet.length - 1; i++) {
+            const temp = [...chordNotes];
+            temp[targetNoteIndex] = noteSet[i];
+            outputChords.push({
+                notes: [...temp],
+                distance: Interval.semitones(Note.distance(chordNotes[targetNoteIndex], noteSet[i])),
+                replacementIndex: targetNoteIndex,
+            });
+        }
+
+        return outputChords;
+    })
+
+    return newChordObjects.map(({ notes, distance, replacementIndex }) => {
+        const chordName = identifyChordByNotes(notes);
+        const chordInfo = getChordInfoByName(chordName);
+        const degrees = chordInfo ? getScaleDegreePatternOfChord(notes, chordInfo.tonic) : null;
+        const intervals = getIntervallicPatternOfNotes(notes);
+
+        const absoluteDistance = Math.abs(distance);
+
+        const direction = distance > 0 ? 'Up' : 'Down';
+        const label = `Move note ${replacementIndex + 1} of ${chord?.symbol} ${absoluteDistance} Semitone(s) ${direction}`;
+        return {
+            ...chordInfo,
+            quality: getChordQualityFromInfo(chordInfo),
+            label,
+            group: 'oblique-motion',
             notes,
             chord: chordName,
             degrees,

@@ -825,7 +825,6 @@ export const generateAllVoicingTransformations = (tonicIndex, notes, originalCho
     }
 
     // TODO - Generate a Total Semitones Changed measure for each transformation
-    // TODO - Tonic Adjustments should only be either 6 semitones up or down
     // TODO - Other movements should be within the confines of the other voices
     // TODO - Generate some tonic adjustments by putting the notes in the bass from the actual chord - mention this in the label
     const tonicAdjustments = generateAllTonicAdjustments(tonicIndex, notes, originalChord);
