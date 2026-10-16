@@ -19,7 +19,6 @@ export const ScaleListTemplate = () => {
     chords: getScaleChordsByNotes(scale.notes, true),
   }))
 
-  console.log(scalesWithChords);
 
   const onKeyToggle = (id) => {
     if (notesArr.includes(id)) {

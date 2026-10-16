@@ -7,14 +7,12 @@ import PianoKeyboard from "../keyboard/PianoKeyboard.tsx";
 import { getCircleOfFifthColorForNote } from '../../utils/colors';
 
 const MiniKeyboard = ({ notes = [] }) => {
-    console.log('Key notes', notes)
     return (
         <PianoKeyboard selectedKeys={notes} startOctave={2} keyboardWidth={320} keyHeight={64} readonly hideLabels/>
     )
 }
 
 const TransformationItem = ({ item }) => {
-    console.log('Item', item)
     return (
         <li
             key={item.chord}

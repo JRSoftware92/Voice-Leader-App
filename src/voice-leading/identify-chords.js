@@ -124,7 +124,6 @@ export const getScaleDegreePatternOfChord = (notes, tonicNote) => {
         } else if (distance[1] === 'd') { // TODO - Test if this is accurate
             return `b${distance[0]}`;
         }
-        console.log('Default', distance)
         return distance;
     });
 }

@@ -144,8 +144,6 @@ export default function PianoKeyboard({
           if (!k) return null;
           const selected = isSelected(k.id);
 
-          console.log('ActiveSelected', activeSelected)
-          console.log('Selected key', selected,k.id);
           return (
             <div
               key={k.id}
