@@ -2,6 +2,7 @@ import { ScrollArea } from "../ui/scroll-area.tsx";
 import { Separator } from "../ui/separator.tsx";
 
 import NoteList from "../note-list/NoteList.tsx";
+import {getDistanceBetweenTonicTransformation} from "../../voice-leading/identify-chords";
 
 const TransformationItem = ({ item }) => {
     return (
@@ -29,16 +30,28 @@ const TransformationItem = ({ item }) => {
 export const ChordTransformationList = ({
     transformations = [],
 }) => {
+    const sortedTransformations = transformations.sort((a, b) => {
+        const distanceA = getDistanceBetweenTonicTransformation(a.tonic, a.prevChordInfo.tonic);
+        const distanceB = getDistanceBetweenTonicTransformation(b.tonic, b.prevChordInfo.tonic);
+
+        console.log('Distance', distanceA, distanceB)
+        return distanceA - distanceB;
+    });
+
     // Group items by category
-    const groupedTransformations = transformations.reduce((acc, item) => {
-        if (!acc[item.group]) {
-            acc[item.group] = [];
+    const groupedTransformations = sortedTransformations.reduce((acc, item) => {
+        if (item?.type) {
+            if (!acc[item.type]) {
+                acc[item.type] = [];
+            }
+            const itemCheckArr = acc[item.type];
+            const sameSymbol = itemCheckArr.find((itemCheck) => itemCheck.symbol === item.symbol);
+            if (!sameSymbol) {
+                acc[item.type].push(item);
+            }
         }
-        acc[item.group].push(item);
         return acc;
     }, {} as Record<string, object[]>);
-
-    console.log(transformations)
 
     return (
         <ScrollArea className="h-[420px] w-2/3 rounded-md border p-4">
@@ -50,7 +63,7 @@ export const ChordTransformationList = ({
                         </h4>
                         <ul className="space-y-1">
                             {groupItems.map((item) => (
-                                <TransformationItem key={item.chord?.symbol} item={item} />
+                                <TransformationItem key={item.symbol} item={item} />
                             ))}
                         </ul>
                         {index < Object.entries(groupedTransformations).length - 1 && (
