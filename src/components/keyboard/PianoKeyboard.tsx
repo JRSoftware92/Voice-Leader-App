@@ -25,7 +25,7 @@ function buildKeys(startOctave: number, totalKeys: number) {
 
 type PianoKeyboardProps = {
     selectedKeys: string[],
-    onKeyToggle: (selectedKey: string) => void,
+    onKeyToggle?: (selectedKey: string) => void,
     startOctave?: number,
     keyboardWidth?: number,
     keyHeight?: number,

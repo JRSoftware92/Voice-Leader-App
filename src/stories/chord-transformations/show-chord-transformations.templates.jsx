@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 
 import {generateAllVoicingTransformations} from "../../voice-leading/chord-transformations.js";
-import ChordTransformationList from "../../components/common/ChordTransformationList/ChordTransformationList.tsx";
+import ChordTransformationList from "../../components/ChordTransformationList/ChordTransformationList.tsx";
 import SelectChordByNotes from "../../components/modals/SelectChordByNotes/SelectChordByNotes.tsx";
 
 // Keyboard and root key specification on bottom

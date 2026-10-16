@@ -116,6 +116,9 @@ const TransformationEntry = ({
   )
 }
 
+// TODO - Deprecate this in favor of a better transformation algorithm and interface
+// Algorithm should short by nearest transformations (smallest jumps, or most sensible jumps)
+// Try to filter duplicate notes that aren't separated by octave when transformations are applied
 export const NearbyChords = () => {
   const [root, setRoot] = useState('C');
   const [notes, setNotes] = useState(['C3', 'E3', 'G3']);
