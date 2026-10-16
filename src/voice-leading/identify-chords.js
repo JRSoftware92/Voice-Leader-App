@@ -84,7 +84,7 @@ export const getShortChordSymbolByQuality = (chord) => {
     return '';
 }
 
-export const getDistanceBetweenTonicTransformation = (tonicA, tonicB) => {
+export const getDistanceBetweenTonicNotes = (tonicA, tonicB) => {
   return Math.abs(Interval.semitones(Note.distance(tonicA, tonicB)));
 }
 

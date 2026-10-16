@@ -129,7 +129,6 @@ export const NearbyChords = () => {
   const chord = getChordInfoByName(chordName);
   const intervals = notes?.length ? getIntervallicPatternOfNotes(rootedNotes) : [];
 
-  console.log('Chrd', chord)
   const chords = getAllTransformations(chord?.intervals, { ...chord, notes: rootedNotes, intervals });
 
   const onKeyToggle = (id) => {

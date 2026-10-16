@@ -328,6 +328,14 @@ export const generateAllTonicAdjustments = (tonicIndex, notes, originalChord = {
     })
 }
 
+// Assume notes in chord are sorted in ascending chromatic order
+export const generateRootlessTransformations = (chord) => {
+  const chordNotes = chord?.notes;
+  const rootNote = chordNotes[0];
+  const nextNote = chordNotes[1];
+
+}
+
 export const generateAllHalfStepParallelMovements = (notes, originalChord = {}) => {
     const indexPairs = getAllIndexPairingsWithinARange(0, notes.length);
     const movementsUp = indexPairs.map((interval) => {
@@ -816,6 +824,10 @@ export const generateAllVoicingTransformations = (tonicIndex, notes, originalCho
         return [];
     }
 
+    // TODO - Generate a Total Semitones Changed measure for each transformation
+    // TODO - Tonic Adjustments should only be either 6 semitones up or down
+    // TODO - Other movements should be within the confines of the other voices
+    // TODO - Generate some tonic adjustments by putting the notes in the bass from the actual chord - mention this in the label
     const tonicAdjustments = generateAllTonicAdjustments(tonicIndex, notes, originalChord);
     const halfStepMovements = generateAllHalfStepMovements(notes, originalChord);
     const parallelMotion = generateAllHalfStepParallelMovements(notes, originalChord);

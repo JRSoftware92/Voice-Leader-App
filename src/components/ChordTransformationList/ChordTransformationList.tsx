@@ -2,7 +2,7 @@ import { ScrollArea } from "../ui/scroll-area.tsx";
 import { Separator } from "../ui/separator.tsx";
 
 import NoteList from "../note-list/NoteList.tsx";
-import {getDistanceBetweenTonicTransformation} from "../../voice-leading/identify-chords";
+import {getDistanceBetweenTonicNotes} from "../../voice-leading/identify-chords";
 
 const TransformationItem = ({ item }) => {
     return (
@@ -31,11 +31,7 @@ export const ChordTransformationList = ({
     transformations = [],
 }) => {
     const sortedTransformations = transformations.sort((a, b) => {
-        const distanceA = getDistanceBetweenTonicTransformation(a.tonic, a.prevChordInfo.tonic);
-        const distanceB = getDistanceBetweenTonicTransformation(b.tonic, b.prevChordInfo.tonic);
-
-        console.log('Distance', distanceA, distanceB)
-        return distanceA - distanceB;
+        return a.distance - b.distance;
     });
 
     // Group items by category
