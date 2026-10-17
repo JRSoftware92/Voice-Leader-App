@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react';
 
+import {Interval, Note, transpose} from "tonal";
+
 import intersection from "lodash/intersection";
 
 import ScaleList from "../../components/scale-list/ScaleList.tsx";
@@ -7,12 +9,20 @@ import SelectScaleByNotes from "../../components/modals/SelectScaleByNotes/Selec
 import ChordList from "../../components/chord-list/ChordList.tsx";
 import {getChordInfoByName} from "../../voice-leading/identify-chords.js";
 import PianoKeyboard from "../../components/keyboard/PianoKeyboard.tsx";
+import {getPianoSampler, playChordSampler} from "../../utils/music.js";
 
 export const ScaleListTemplate = () => {
   const [scales, setScales] = useState([]);
   const [selectedScale, setSelectedScale] = useState(null);
   const [open, setOpen] = useState(false);
   const [notesArr, setNotes] = useState([]);
+
+  const sampler = getPianoSampler();
+
+  const onChordClicked = (chord) => {
+    const notes = chord.intervals.map(interval => transpose(`${chord.tonic}3`, interval));
+    playChordSampler(sampler, notes);
+  }
 
   const onScaleSelected = useCallback((scale) => {
     setScales([
@@ -52,7 +62,7 @@ export const ScaleListTemplate = () => {
   return (
     <div className="flex flex-col items-center w-full">
       <ScaleList scales={scales} selectedScaleName={selectedScale?.name} onClick={handleScaleClick} onDelete={handleScaleDelete}/>
-      <ChordList chords={chords} scale={selectedScale}/>
+      <ChordList chords={chords} scale={selectedScale} onClick={onChordClicked}/>
       <SelectScaleByNotes notes={notesArr} onAccept={onScaleSelected} open={open} setOpen={setOpen} />
       <PianoKeyboard selectedKeys={notesArr} onKeyToggle={onKeyToggle} hideLabels />
     </div>
