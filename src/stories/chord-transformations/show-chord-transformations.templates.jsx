@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {Note} from "tonal";
+import {PolySynth} from "tone";
 
 import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 
@@ -10,8 +11,7 @@ import {
 import ChordTransformationList from "../../components/ChordTransformationList/ChordTransformationList.tsx";
 import SelectChordByNotes from "../../components/modals/SelectChordByNotes/SelectChordByNotes.tsx";
 import {generateRootlessTransformations, generateSingleNoteTransformations} from "../../utils/transformation-utils.ts";
-import {playChord} from "../../utils/music.js";
-import {PolySynth, start} from "tone";
+import {getPianoSampler, playChord, playChordSampler} from "../../utils/music.js";
 
 // Keyboard and root key specification on bottom
 // List panels on top:
@@ -34,6 +34,7 @@ export const ChordTransformationsTemplate = () => {
   const [open, setOpen] = useState(false);
 
   const synth = new PolySynth().toDestination();
+  const sampler = getPianoSampler();
 
   // const transforms = selectedChord ? generateAllVoicingTransformations(0, notesArr, selectedChord) : [];
   const rootless = selectedChord ? generateRootlessTransformations(selectedChord, notesArr) : [];
@@ -52,8 +53,8 @@ export const ChordTransformationsTemplate = () => {
     }
   }
 
-  const onTransformationClick = async (transformation) => {
-    playChord(synth, transformation.prevChordInfo.notes).then(() => playChord(synth, transformation.notes));
+  const onTransformationClick = (transformation) => {
+    playChordSampler(sampler, transformation.prevChordInfo.notes).then(() => playChordSampler(sampler, transformation.notes));
   }
 
   const onAccept = (chord) => {
