@@ -155,18 +155,18 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
       }
 
       if (Intervals.sharpEleventh(intervals)) {
-        return `${dominantCode}#11`
+        return `${dominantCode}${triadType}#11`
       }
       if (Intervals.minorThirteenth(intervals)) {
-        return `${dominantCode}b13`
+        return `${dominantCode}${triadType}b13`
       }
       if (Intervals.minorNinth(intervals)) {
-        return `${dominantCode}b9`
+        return `${dominantCode}${triadType}b9`
       }
       if (Intervals.sharpNinth(intervals)) {
-        return `${dominantCode}#9`
+        return `${dominantCode}${triadType}#9`
       }
-      return dominantCode;
+      return `${dominantCode}${triadType}`;
     }
   }
 
