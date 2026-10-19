@@ -139,6 +139,10 @@ const simplifyTypeAndExtension = (chordType, extension) => {
   return `${chordType}${extension}`;
 }
 
+export const simplifyAlterationsAndAugmentations = (chordType, alteration, augmentation) => {
+  return chordType === ChordType.DOMINANT ? `${alteration}${augmentation}` : augmentation;
+}
+
 export const deriveTypeFromIntervals = (intervals) => {
   const chordType = getTypeOfChord(intervals);
   const extension = getExtensionForChord(intervals);
@@ -146,7 +150,7 @@ export const deriveTypeFromIntervals = (intervals) => {
   const augmentation = getAugmentationsForChord(intervals, [extension, alteration]);
 
   const simplifiedType = simplifyTypeAndExtension(chordType, extension);
-  const simplifiedAdditions = chordType === ChordType.DOMINANT ? alteration : augmentation;
+  const simplifiedAdditions = simplifyAlterationsAndAugmentations(chordType, alteration, augmentation)
 
   // console.groupCollapsed('Type from Intervals');
   // console.log('Intervals', intervals);
