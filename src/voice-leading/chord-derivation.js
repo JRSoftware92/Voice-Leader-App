@@ -53,7 +53,7 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
 
   const majorThird = Intervals.third(intervals);
   const minorThird = Intervals.minorThird(intervals);
-  const majorSeventh = Intervals.third(intervals);
+  const majorSeventh = Intervals.seventh(intervals);
   const minorSeventh = Intervals.minorSeventh(intervals);
 
   const majorSixth = Intervals.sixth(intervals);
@@ -91,7 +91,8 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
       }
       return '7';
     }
-    if (majorSeventh) {
+    else if (majorSeventh) {
+      console.log('Found Major Seventh')
       if (isThirteenthChord(intervals)) {
         return 'maj13';
       }
@@ -106,8 +107,21 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
       }
       return 'maj7';
     }
-    if (majorSixth || majorThirteenth) {
+    else if (majorSixth || majorThirteenth) {
       return '6';
+    } else {
+      if (majorThirteenth) {
+        return 'add13';
+      }
+      if (perfectEleventh) {
+        return 'add11';
+      }
+      if (majorNinth) {
+        return 'add9';
+      }
+      if (Intervals.second(intervals)) {
+        return 'add2';
+      }
     }
   }
 
@@ -200,16 +214,6 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
         return dominantCode;
       } else if (majorSixth) {
         return '6';
-      } else {
-        if (majorThirteenth) {
-          return 'add13';
-        }
-        if (perfectEleventh) {
-          return 'add11';
-        }
-        if (majorNinth) {
-          return 'add9';
-        }
       }
     }
     if (minorThird) {
@@ -239,7 +243,7 @@ export const deriveChordNameFromNotes = (notes = [], tonic = null) => {
   const intervals = uniq(getHarmonicIntervalsOfNotes(notes, root).map((interval) => normalizeIntervalToTwoOctaves(interval)))
   const chordType = deriveExtensionFromIntervals(intervals);
 
-  const lowestNoteDifferent = notes[0] !== root && tonic !== null;
+  const lowestNoteDifferent = notes[0].replace(/\d/g, '') !== root.replace(/\d/g, '') && tonic !== null;
 
   const slashSuffix = lowestNoteDifferent ? ` / ${notes[0].replace(/\d/g, '')}` : '';
   return `${root.replace(/\d/g, '')}${chordType}${slashSuffix}`;
