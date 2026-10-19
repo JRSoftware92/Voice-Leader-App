@@ -1,5 +1,6 @@
 // This file contains utility functions for identifying chords based on a set of notes
-import { Note, Chord, Interval, transpose } from 'tonal';
+import { Note, Chord, Scale, Interval, transpose } from 'tonal';
+import {getScaleInfoByName, getScaleNamesByNotes} from "./identify-scales.js";
 
 
 export const identifyChordByNotes = (notes = []) => {
@@ -35,7 +36,11 @@ export const getChordInfoByName = (name) => {
         const quality = getChordQualityFromInfo(chord);
         const qualitySymbol = getShortChordSymbolByQuality(chord);
 
-        const notes = chord.notes.map(note => Note.enharmonic(note));
+        const unsortedNotes = chord.notes.map(note => Note.enharmonic(note));
+        const notes = unsortedNotes.sort((a, b) => {
+          return Note.midi(a) - Note.midi(b);
+        });
+
         return {
             ...chord,
             quality,
@@ -185,4 +190,36 @@ export const getChordQualityFromInfo = (chordInfo = {}) => {
     }
 
     return quality;
+}
+
+const getRelativeDegree = (tonic, note) => {
+  // 1. Get the interval from the tonic to the chromatic note (e.g., "3m" for minor third)
+  const intervalName = Interval.distance(tonic, note);
+
+  if (intervalName === "") return null; // Invalid notes
+
+  // 2. Parse the interval details to extract the alteration and degree number
+  const interval = Interval.get(intervalName);
+
+  // Convert standard Tonal.js interval properties to user-friendly scale degrees
+  const { num, alt } = interval;
+
+  const normalizedDegree = ((num - 1) % 7 + 7) % 7 + 1;
+
+  // Map internal alteration numbers to flats (b) and sharps (#)
+  let accidental = "";
+  if (alt < 0) accidental = "b".repeat(Math.abs(alt));
+  if (alt > 0) accidental = "#".repeat(alt);
+
+  return `${accidental}${normalizedDegree}`;
+}
+
+
+export const getHarmonicIntervalsOfNotes = (notes = [], tonic = null) => {
+  const root = tonic || notes[0];
+  return notes.map(note => Interval.distance(root, note));
+}
+
+export const getNotesFromTonicAndIntervals = (tonic, intervals) => {
+  return intervals.map(interval => Note.transpose(tonic, interval));
 }

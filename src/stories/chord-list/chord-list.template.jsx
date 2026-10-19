@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Chord } from "tonal";
+import {Chord, Note} from "tonal";
 
 import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 
@@ -20,7 +20,11 @@ export const ChordListTemplate = () => {
     if (notesArr.includes(id)) {
       setNotes(notesArr.filter((val) => val !== id));
     } else {
-      setNotes([...notesArr, id]);
+      const newArr = [...notesArr, id];
+      const sortedNotes = newArr.sort((a, b) => {
+        return Note.midi(a) - Note.midi(b);
+      });
+      setNotes(sortedNotes);
     }
   }
 
