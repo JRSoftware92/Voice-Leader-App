@@ -100,6 +100,9 @@ const getAugmentationsForChord = (intervals, exclude = []) => {
   if (Intervals.ninth(intervals) && !exclude.includes('9')) {
     return 'add9';
   }
+  if (Intervals.sixth(intervals) && !exclude.includes('6')) {
+    return 'add6';
+  }
   if (Intervals.fourth(intervals) && !exclude.includes('4')) {
     return 'add4';
   }
