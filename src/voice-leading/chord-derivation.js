@@ -32,6 +32,9 @@ const getTypeOfChord = (intervals) => {
       return ChordType.MAJOR;
     }
     if (minorThird) {
+      if (majorSeventh) {
+        return ChordType.MAJOR_MINOR;
+      }
       return ChordType.MINOR;
     }
     if (majorSecond) {
@@ -49,6 +52,9 @@ const getTypeOfChord = (intervals) => {
     }
     if (majorThird && minorSeventh) {
       return ChordType.DOMINANT;
+    }
+    if (minorThird && majorSeventh) {
+      return ChordType.MAJOR_MINOR;
     }
   }
 

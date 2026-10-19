@@ -4,10 +4,10 @@ export type Chord = {
     degrees: string[],
     notes: string[],
 }
-// @ts-ignore
 export enum ChordType {
     MAJOR = 'maj',
     MINOR = 'min',
+    MAJOR_MINOR = 'm/M',
     SUSPENDED_SECOND = 'sus2',
     SUSPENDED_FOURTH = 'sus4',
     AUGMENTED = 'aug',
