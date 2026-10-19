@@ -1,6 +1,10 @@
 import uniq from 'lodash/uniq';
 
-import {getHarmonicIntervalsOfNotes, normalizeIntervalToTwoOctaves } from "./identify-intervals.js";
+import {
+  convertIntervalsToScaleDegrees,
+  getHarmonicIntervalsOfNotes,
+  normalizeIntervalToTwoOctaves
+} from "./identify-intervals.js";
 import {ChordType} from "../types/Chord.ts";
 
 import { INTERVAL_CHECKER as Intervals } from "./identify-intervals.js";
@@ -173,17 +177,40 @@ export const deriveTypeFromIntervals = (intervals) => {
   return `${simplifiedType}${simplifiedAdditions}`;
 }
 
-export const deriveChordNameFromNotes = (notes = [], tonic = null) => {
+// FIXME - Degrees are wrong - intervals going backwards seem to be incorrect
+export const deriveChordFromNotes = (notes = [], tonic = null) => {
   const root = tonic || notes[0];
-  const intervals = uniq(getHarmonicIntervalsOfNotes(notes, root).map((interval) => normalizeIntervalToTwoOctaves(interval)))
+  const harmonicIntervals = getHarmonicIntervalsOfNotes(notes, root);
+  const normalizedIntervals = harmonicIntervals.map((interval) => normalizeIntervalToTwoOctaves(interval));
+  const intervals = uniq(normalizedIntervals);
   const chordType = deriveTypeFromIntervals(intervals);
+
+  console.groupCollapsed('Interval Check', root, chordType);
+  console.log('Intervals', intervals);
+  console.log('------')
+  console.log('Harmonic step', harmonicIntervals);
+  console.log('Normalization', normalizedIntervals)
+  console.log('Notes', notes);
+  console.groupEnd();
 
   const lowestNoteDifferent = notes[0].replace(/\d/g, '') !== root.replace(/\d/g, '') && tonic !== null;
 
   const slashSuffix = lowestNoteDifferent ? ` / ${notes[0].replace(/\d/g, '')}` : '';
-  return `${root.replace(/\d/g, '')}${chordType}${slashSuffix}`;
+  const name = `${root.replace(/\d/g, '')}${chordType}${slashSuffix}`;
+  return {
+    unknown: name.includes('?'),
+    name,
+    symbol: name,
+    root,
+    tonic: root,
+    bass: notes[0],
+    type: chordType,
+    notes,
+    intervals,
+    degrees: convertIntervalsToScaleDegrees(intervals),
+  };
 }
 
-export const getPossibleNamesOfChordByNotes = (notes = []) => {
-  return notes.map(note => deriveChordNameFromNotes(notes, note)).filter((str) => !str.includes('?'));
+export const getPossibleChordsByNotes = (notes = []) => {
+  return notes.map(note => deriveChordFromNotes(notes, note)).filter((chord) => !chord.unknown);
 }

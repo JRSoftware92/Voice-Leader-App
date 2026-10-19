@@ -1,5 +1,35 @@
 import { Interval } from 'tonal';
 
+const INTERVAL_TO_SCALE_DEGREE = {
+  '1P': '1',
+  '2m': 'b2',
+  '2M': '2',
+  '3m': 'b3',
+  '3M': '3',
+  '4P': '4',
+  '5d': '#4',
+  '5P': '5',
+  '6m': '#5',
+  '6M': '6',
+  '7m': 'b7',
+  '7M': '7',
+  '8P': '1',
+  '9m': 'b9',
+  '9M': '9',
+  '10m': '#9',
+  '10M': '3',
+  '11P': '11',
+  '12d': '#11',
+  '12P': '5',
+  '13m': 'b13',
+  '13M': '13',
+  '14m': '#13',
+  '14M': '7',
+  '15P': '1',
+}
+
+export const convertIntervalsToScaleDegrees = (intervals) => intervals.map(interval => INTERVAL_TO_SCALE_DEGREE[interval])
+
 export const getHarmonicIntervalsOfNotes = (notes = [], tonic = null) => {
   const root = tonic || notes[0];
   return notes.map(note => Interval.distance(root, note));
@@ -30,7 +60,7 @@ export const normalizeIntervalToTwoOctaves = (intervalName) => {
 
 // Interval Identification, normalized for algorithmic derivation of chord names
 const hasMajorThird = intervals => intervals.includes('3M') || intervals.includes('10M');
-const hasMinorThird = intervals => intervals.includes('3m') || intervals.includes('10m');
+const hasMinorThird = intervals => intervals.includes('3m');
 const hasMajorSeventh = intervals => intervals.includes('7M') || intervals.includes('14M')
 const hasMinorSeventh = intervals => intervals.includes('7m') || intervals.includes('14m')
 

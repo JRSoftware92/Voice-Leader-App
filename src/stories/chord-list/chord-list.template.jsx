@@ -3,18 +3,14 @@ import {Chord, Note} from "tonal";
 
 import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 
-import {
-  getChordInfoByName, getHarmonicIntervalsOfNotes,
-  identifyPossibleChords
-} from "../../voice-leading/identify-chords";
 import ChordList from "../../components/chord-list/ChordList.tsx";
+import {getPossibleChordsByNotes} from "../../voice-leading/chord-derivation.js";
 
 export const ChordListTemplate = () => {
   const [notesArr, setNotes] = useState(['C3', 'E3', 'G3', 'B3']);
   const [selectedChord, setSelectedChord] = useState(null);
 
-  const chordNames = identifyPossibleChords(notesArr);
-  const chords = chordNames.map((name) => getChordInfoByName(name));
+  const chords = getPossibleChordsByNotes(notesArr);
 
   const onKeyToggle = (id) => {
     if (notesArr.includes(id)) {
