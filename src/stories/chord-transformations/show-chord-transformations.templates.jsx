@@ -47,8 +47,10 @@ export const ChordTransformationsTemplate = () => {
     if (notesArr.includes(id)) {
       setNotes(notesArr.filter((val) => val !== id));
     } else {
-      const newNotes = [...notesArr, id];
-      const sortedNotes = newNotes.sort((a, b) => Note.midi(a) - Note.midi(b));
+      const newArr = [...notesArr, id];
+      const sortedNotes = newArr.sort((a, b) => {
+        return Note.midi(a) - Note.midi(b);
+      });
       setNotes(sortedNotes);
     }
   }

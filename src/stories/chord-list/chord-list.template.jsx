@@ -4,7 +4,7 @@ import {Chord, Note} from "tonal";
 import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 
 import {
-  getChordInfoByName,
+  getChordInfoByName, getHarmonicIntervalsOfNotes,
   identifyPossibleChords
 } from "../../voice-leading/identify-chords";
 import ChordList from "../../components/chord-list/ChordList.tsx";
@@ -15,6 +15,8 @@ export const ChordListTemplate = () => {
 
   const chordNames = identifyPossibleChords(notesArr);
   const chords = chordNames.map((name) => getChordInfoByName(name));
+
+  console.log(getHarmonicIntervalsOfNotes(notesArr, notesArr[0]))
 
   const onKeyToggle = (id) => {
     if (notesArr.includes(id)) {

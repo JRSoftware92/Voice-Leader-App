@@ -132,13 +132,16 @@ export const NearbyChords = () => {
   const chords = getAllTransformations(chord?.intervals, { ...chord, notes: rootedNotes, intervals });
 
   const onKeyToggle = (id) => {
-    if (notes.includes(id)) {
-      setNotes(notes.filter((val) => val !== id));
+    if (notesArr.includes(id)) {
+      setNotes(notesArr.filter((val) => val !== id));
     } else {
-      setNotes([...notes, id]);
+      const newArr = [...notesArr, id];
+      const sortedNotes = newArr.sort((a, b) => {
+        return Note.midi(a) - Note.midi(b);
+      });
+      setNotes(sortedNotes);
     }
   }
-
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>

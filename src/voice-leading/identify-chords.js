@@ -1,7 +1,5 @@
 // This file contains utility functions for identifying chords based on a set of notes
 import { Note, Chord, Scale, Interval, transpose } from 'tonal';
-import {getScaleInfoByName, getScaleNamesByNotes} from "./identify-scales.js";
-
 
 export const identifyChordByNotes = (notes = []) => {
     try {
@@ -212,12 +210,6 @@ const getRelativeDegree = (tonic, note) => {
   if (alt > 0) accidental = "#".repeat(alt);
 
   return `${accidental}${normalizedDegree}`;
-}
-
-
-export const getHarmonicIntervalsOfNotes = (notes = [], tonic = null) => {
-  const root = tonic || notes[0];
-  return notes.map(note => Interval.distance(root, note));
 }
 
 export const getNotesFromTonicAndIntervals = (tonic, intervals) => {
