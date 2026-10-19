@@ -31,7 +31,7 @@ export const NoteDropdown = ({
             >
               {
                 NOTES.map((note) => (
-                  <AriaSelectItem id={note}>
+                  <AriaSelectItem key={note} id={note}>
                     {note}
                   </AriaSelectItem>
                 ))

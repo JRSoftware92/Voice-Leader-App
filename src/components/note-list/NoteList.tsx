@@ -18,7 +18,7 @@ export const NoteList = ({ notes = [] }: NoteListProps) => {
         <div className="p-1 m-2 flex items-center">
             {
                notes?.map((note) => (
-                   <NoteListItem note={note.replace(/\d/g, '')} />
+                   <NoteListItem key={note} note={note.replace(/\d/g, '')} />
                ))
             }
         </div>
