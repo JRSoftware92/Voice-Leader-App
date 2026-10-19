@@ -96,9 +96,6 @@ const getAlterationsForChord = (intervals) => {
   if (Intervals.minorThirteenth(intervals)) {
     return 'b13';
   }
-  if (Intervals.augFifth(intervals)) {
-    return '#5';
-  }
   return '';
 }
 
