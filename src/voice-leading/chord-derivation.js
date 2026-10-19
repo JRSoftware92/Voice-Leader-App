@@ -40,12 +40,12 @@ export const deriveTriadTypeByIntervals = (intervals = []) => {
   return null;
 }
 
-const isThirteenthChord = (intervals, major = true) => {
+const isThirteenthChord = (intervals) => {
   return Intervals.thirteenth(intervals) && isEleventhChord(intervals);
 }
 
-const isEleventhChord = (intervals, major = true) => {
-  return Intervals.ninth(intervals) && (Intervals.eleventh(intervals) || (major && Intervals.sharpEleventh(intervals)));
+const isEleventhChord = (intervals) => {
+  return Intervals.ninth(intervals) && (Intervals.eleventh(intervals));
 }
 
 export const deriveExtensionFromIntervals = (intervals = []) => {
@@ -103,6 +103,9 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
       if (isEleventhChord(intervals)) {
         return 'maj11';
       }
+      if (Intervals.sharpEleventh(intervals)) {
+        return 'maj7#11'
+      }
       if (Intervals.ninth(intervals)) {
         return 'maj9'
       }
@@ -115,10 +118,10 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
 
   if (triadType === TriadType.MINOR) {
     if (minorSeventh) {
-      if (isThirteenthChord(intervals, false)) {
+      if (isThirteenthChord(intervals)) {
         return 'min13';
       }
-      if (isEleventhChord(intervals, false)) {
+      if (isEleventhChord(intervals)) {
         return 'min11';
       }
       if (Intervals.ninth(intervals)) {
@@ -140,6 +143,9 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
       if (perfectEleventh && !isEleventhChord(intervals)) {
         return 'maj7add11'
       }
+      if (Intervals.sharpEleventh(intervals)) {
+        return 'maj7#11'
+      }
       if (majorNinth) {
         return 'maj9'
       }
@@ -158,19 +164,30 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
       return 'min7';
     }
     if (majorThird && minorSeventh) {
+      let dominantCode = '7';
       if (majorThirteenth) {
-        return '13'
+        dominantCode = '13'
       }
       if (perfectEleventh) {
-        return '11'
+        dominantCode = '11'
       }
       if (majorNinth) {
-        return '9'
+        dominantCode = '9'
       }
-      if (Intervals.altered(intervals)) {
-        return '7alt';
+
+      if (Intervals.sharpEleventh(intervals)) {
+        return `${dominantCode}#11`
       }
-      return '7';
+      if (Intervals.minorThirteenth(intervals)) {
+        return `${dominantCode}b13`
+      }
+      if (Intervals.minorNinth(intervals)) {
+        return `${dominantCode}b9`
+      }
+      if (Intervals.sharpNinth(intervals)) {
+        return `${dominantCode}#9`
+      }
+      return dominantCode;
     }
   }
 

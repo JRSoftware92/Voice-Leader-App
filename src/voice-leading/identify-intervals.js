@@ -76,6 +76,7 @@ export const INTERVAL_CHECKER = {
   sixth: hasMajorSixth,
   thirteenth: hasMajorThirteenth,
   sharpEleventh: hasSharpEleventh,
+  sharpNinth: hasSharpNinth,
   minorThirteenth: hasMinorThirteen,
   altered: hasAlteredDegree,
 }
