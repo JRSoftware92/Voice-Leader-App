@@ -22,6 +22,9 @@ const getTypeOfChord = (intervals) => {
     return ChordType.AUGMENTED;
   }
   if (diminishedFifth && minorThird) {
+    if (minorSeventh) {
+      return ChordType.HALF_DIMINISHED;
+    }
     return ChordType.DIMINISHED;
   }
   if (fifth) {
@@ -93,6 +96,9 @@ const getAlterationsForChord = (intervals) => {
   if (Intervals.minorThirteenth(intervals)) {
     return 'b13';
   }
+  if (Intervals.augFifth(intervals)) {
+    return '#5';
+  }
   return '';
 }
 
@@ -127,7 +133,16 @@ const simplifyTypeAndExtension = (chordType, extension) => {
   if (chordType === ChordType.SUSPENDED_SECOND || chordType === ChordType.SUSPENDED_FOURTH) {
     return `${extension}${chordType}`;
   }
-  if (chordType === ChordType.AUGMENTED || chordType === ChordType.DIMINISHED) {
+  if (chordType === ChordType.HALF_DIMINISHED) {
+    return chordType;
+  }
+  if (chordType === ChordType.AUGMENTED) {
+    if (extension?.length && extension !== '6') {
+      return `${extension}#5`;
+    }
+    return chordType;
+  }
+  if (chordType === ChordType.DIMINISHED) {
     if (extension !== '7') {
       return chordType;
     }
@@ -140,6 +155,9 @@ const simplifyTypeAndExtension = (chordType, extension) => {
 }
 
 export const simplifyAlterationsAndAugmentations = (chordType, alteration, augmentation) => {
+  if (ChordType.HALF_DIMINISHED) {
+    return augmentation;
+  }
   return chordType === ChordType.DOMINANT ? `${alteration}${augmentation}` : augmentation;
 }
 

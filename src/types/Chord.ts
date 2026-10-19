@@ -12,5 +12,6 @@ export enum ChordType {
     SUSPENDED_FOURTH = 'sus4',
     AUGMENTED = 'aug',
     DIMINISHED = 'dim',
+    HALF_DIMINISHED = 'm7b5',
     DOMINANT = 'dom',
 }

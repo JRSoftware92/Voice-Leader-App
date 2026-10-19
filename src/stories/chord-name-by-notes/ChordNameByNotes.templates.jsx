@@ -35,7 +35,11 @@ export const ChordNameByNotes = ({ width, height, readonly, hideLabels, numberOf
   const possibleNames = getPossibleNamesOfChordByNotes(notesArr);
   const chordName = possibleNames.length > 0 ? possibleNames[0] : '';
 
-  console.log('Names', possibleNames)
+  console.groupCollapsed('Chord Names');
+  console.log('Notes', notesArr);
+  console.log('Names', possibleNames);
+  console.groupEnd();
+
   const onKeyToggle = (id) => {
     if (notesArr.includes(id)) {
       setNotes(notesArr.filter((val) => val !== id));
