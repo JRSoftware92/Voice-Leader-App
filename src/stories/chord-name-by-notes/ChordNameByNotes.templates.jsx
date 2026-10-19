@@ -14,8 +14,28 @@ import {deriveChordNameFromNotes, getPossibleNamesOfChordByNotes} from "../../vo
 export const ChordNameByNotes = ({ width, height, readonly, hideLabels, numberOfOctaves }) => {
   const [notesArr, setNotes] = useState(['C3', 'E3', 'G3', 'B3']);
 
+  // FIXME - Feels too loose with type assignments - need strictly branching cases that are easy to predict
+  // Simplify rules by tonal role (third, fifth, seventh, extensions, augmentations / alterations)
+  // Third = major, minor, sus2, or sus4
+  // Fifth = Normal Triad, Augmented Triad, Diminished Triad
+  // Seventh = Major Seventh, Minor Seventh, Sixth*
+  // From here you get: maj, min, maj6, min6, maj7, min7, sus2, sus4, aug, aug7, dim, dim7, m7b5, dom7
+
+  // Extensions = 9, 11, 13 = (2, 4, 6)
+  // 9, 11, 13 - relies on the presence of a 7th - otherwise, they're augmentations. Sixth doesn't count here
+  // maj7, min7, and dom7 get a different label when extensions are present (maj9, min11, dom13, etc.)
+  //
+  // Alterations = b9 (b2), #9 (b3), #11 (b5), b13 (#5) - these are appended
+  // Augmentations = Everything else (add2, add9, etc.) - these are appended
+
+  // Name Formula: Type + Extension + Alteration & Augmentations
+
+  // Separate logic for third, fifth, and seventh from extensions, alterations, and augmentations
+  // These can be done in stages, sort of, but 3 5 and 7 determine the most important parts of the chord
   const possibleNames = getPossibleNamesOfChordByNotes(notesArr);
   const chordName = possibleNames.length > 0 ? possibleNames[0] : '';
+
+  console.log('Names', possibleNames)
   const onKeyToggle = (id) => {
     if (notesArr.includes(id)) {
       setNotes(notesArr.filter((val) => val !== id));
