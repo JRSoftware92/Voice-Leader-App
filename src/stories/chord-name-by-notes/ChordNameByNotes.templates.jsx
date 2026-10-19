@@ -14,7 +14,8 @@ import {deriveChordNameFromNotes, getPossibleNamesOfChordByNotes} from "../../vo
 export const ChordNameByNotes = ({ width, height, readonly, hideLabels, numberOfOctaves }) => {
   const [notesArr, setNotes] = useState(['C3', 'E3', 'G3', 'B3']);
 
-  const chordName = notesArr.length > 2 ? deriveChordNameFromNotes(notesArr, notesArr[0]) : '';
+  const possibleNames = getPossibleNamesOfChordByNotes(notesArr);
+  const chordName = possibleNames.length > 0 ? possibleNames[0] : '';
   const onKeyToggle = (id) => {
     if (notesArr.includes(id)) {
       setNotes(notesArr.filter((val) => val !== id));
@@ -24,8 +25,6 @@ export const ChordNameByNotes = ({ width, height, readonly, hideLabels, numberOf
       setNotes(sortedNotes);
     }
   }
-
-  console.log('All Names', getPossibleNamesOfChordByNotes(notesArr))
 
   const onPlayChord = () => playChord(notesArr);
 

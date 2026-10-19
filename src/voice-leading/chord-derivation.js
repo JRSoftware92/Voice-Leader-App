@@ -92,7 +92,6 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
       return '7';
     }
     else if (majorSeventh) {
-      console.log('Found Major Seventh')
       if (isThirteenthChord(intervals)) {
         return 'maj13';
       }
