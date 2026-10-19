@@ -212,17 +212,22 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
         }
       }
     }
-    if (minorThird && minorSeventh) {
-      if (majorThirteenth && !isThirteenthChord(intervals)) {
-        return 'min7add13'
+    if (minorThird) {
+      if (minorSeventh) {
+        if (majorThirteenth && !isThirteenthChord(intervals)) {
+          return 'min7add13'
+        }
+        if (perfectEleventh && !isEleventhChord(intervals)) {
+          return 'min7add11'
+        }
+        if (majorNinth) {
+          return 'min9'
+        }
+        return 'min7';
       }
-      if (perfectEleventh && !isEleventhChord(intervals)) {
-        return 'min7add11'
+      if (majorSixth || majorThirteenth) {
+        return 'min6';
       }
-      if (majorNinth) {
-        return 'min9'
-      }
-      return 'min7';
     }
   }
 
@@ -232,7 +237,6 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
 export const deriveChordNameFromNotes = (notes = [], tonic = null) => {
   const root = tonic || notes[0];
   const intervals = uniq(getHarmonicIntervalsOfNotes(notes, root).map((interval) => normalizeIntervalToTwoOctaves(interval)))
-  // console.log('Intervals', intervals);
   const chordType = deriveExtensionFromIntervals(intervals);
 
   const lowestNoteDifferent = notes[0] !== root && tonic !== null;
