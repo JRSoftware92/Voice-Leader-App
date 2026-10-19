@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {Note} from "tonal";
 import {PolySynth} from "tone";
 
@@ -11,7 +11,7 @@ import {
 import ChordTransformationList from "../../components/ChordTransformationList/ChordTransformationList.tsx";
 import SelectChordByNotes from "../../components/modals/SelectChordByNotes/SelectChordByNotes.tsx";
 import {generateRootlessTransformations, generateSingleNoteTransformations} from "../../utils/transformation-utils.ts";
-import {getPianoSampler, playChord, playChordSampler} from "../../utils/music.js";
+import {getPianoSampler, playChordSampler} from "../../utils/music.js";
 
 // Keyboard and root key specification on bottom
 // List panels on top:

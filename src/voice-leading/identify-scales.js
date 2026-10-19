@@ -15,15 +15,50 @@ const MINOR_MAP = ['min', 'dim', 'maj', 'min', 'min', 'maj', 'maj'];
 const MINOR_ROMAN_NUMERALS = ['i', 'ii(dim)', 'III', 'iv', 'v', 'VI', 'VII']
 const ALL_MINOR_NUMERALS = ['i', 'bii', 'ii(dim)', 'bIII', 'III', 'iv', '#iv', 'v', 'bVI', 'VI', 'bVII', 'VII']
 
-export const getScaleNamesByNotes = (notes = [], tonic = null, exact = false) => {
+export const getParentMajor = (scale) => {
+  if (scale.empty) return null;
+
+  const scaleName = scale.name;
+
+  // Map modes to their scale degree step (1-indexed: Ionian=1, Dorian=2, Phrygian=3, Lydian=4, Mixolydian=5, Aeolian=6, Locrian=7)
+  const modeOffsets = {
+    ionian: "1P",
+    dorian: "-2M",
+    phrygian: "-3M",
+    lydian: "-4P",
+    mixolydian: "-5P",
+    aeolian: "-6M",
+    locrian: "-7m"
+  };
+
+  const scaleNameSplit = scaleName.split(" ");
+  const [tonic, type] = scaleNameSplit;
+  if (scaleNameSplit.length > 2) {
+    return scale;
+  }
+  const normalizedType = type.toLowerCase();
+  const offset = modeOffsets[normalizedType];
+
+  if (!offset) return null;
+
+  const parentTonic = Note.transpose(tonic, offset);
+  const parentMajorName = `${parentTonic} major`
+  return Scale.get(parentMajorName);
+}
+
+export const getScaleNamesByNotes = (notes = [], exact = false, tonic = null) => {
+    const normalizedNotes = notes.map((note) => note.replace(/\d+/g, ''));
+    console.log('Normalized Notes', normalizedNotes)
     if (tonic) {
-        return Scale.detect(notes, { tonic, match: exact ? 'exact' : 'fit' });
+        return Scale.detect(normalizedNotes, { tonic, match: exact ? 'exact' : 'fit' });
     }
-    return Scale.detect(notes);
+    return Scale.detect(normalizedNotes, { match: exact ? 'exact' : 'fit'});
 }
 
 export const getScaleInfoByName = (scaleName) => {
-    return Scale.get(scaleName);
+    const parentScale = Scale.get(scaleName);
+    const parentMajor = getParentMajor(parentScale);
+    return parentMajor ? parentMajor : parentScale;
 }
 
 export const getScaleTriadsByNotes = (notes = []) => {
@@ -70,6 +105,25 @@ const convertIntervalToScaleAlteration = (interval) => {
     return "#".repeat(interval.alt); // Raised degree
   }
   return ''
+}
+
+export const getScalesMatchingChords = (chords = [], lessThanEightNotes = true) => {
+  console.log('Chords', chords)
+  const noteSet = new Set();
+  chords.forEach((chord) => {
+    const chordNotes = chord.notes.forEach((note) => noteSet.add(note.replace(/\d/g, '')));
+    return chordNotes
+  })
+
+  console.log('Note Set', noteSet);
+
+  const approximateScales = getScaleNamesByNotes([...noteSet], false).map(scaleName => getScaleInfoByName(scaleName));
+  return approximateScales.filter((scale) => {
+    if (lessThanEightNotes) {
+      return scale.notes.length < 8;
+    }
+    return scale.notes.some(note => !noteSet.has(note));
+  })
 }
 
 export const getRelativeScaleDegree = (tonic, targetNote)=> {

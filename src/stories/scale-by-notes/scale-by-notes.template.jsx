@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
+import uniqBy from 'lodash/uniqBy';
+
 import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 
 import {
   getScaleNamesByNotes,
   getScaleInfoByName,
-  getScaleChordsByNotes,
 } from "../../voice-leading/identify-scales.js";
 import ScaleList from "../../components/scale-list/ScaleList.tsx";
 import {getPianoSampler, playNotesSampler} from "../../utils/music.js";
@@ -16,6 +17,7 @@ export const ScaleListTemplate = () => {
 
   const scaleNames = getScaleNamesByNotes(notesArr);
   const scales = scaleNames.map((name) => getScaleInfoByName(name));
+  const deduplicatedScales = uniqBy(scales, (scale) => scale.name);
 
 
   const onKeyToggle = (id) => {
@@ -32,7 +34,7 @@ export const ScaleListTemplate = () => {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <ScaleList scales={scales} startNotes={notesArr} onClick={onScaleClick} />
+      <ScaleList scales={deduplicatedScales} startNotes={notesArr} onClick={onScaleClick} />
       <PianoKeyboard selectedKeys={notesArr} onKeyToggle={onKeyToggle} />
     </div>
   )
