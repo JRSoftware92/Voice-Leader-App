@@ -126,6 +126,9 @@ const simplifyTypeAndExtension = (chordType, extension) => {
     if (extension === '6') {
       return extension;
     }
+    if (!extension?.length) {
+      return chordType;
+    }
   }
   if (chordType === ChordType.SUSPENDED_SECOND || chordType === ChordType.SUSPENDED_FOURTH) {
     return `${extension}${chordType}`;
@@ -152,9 +155,6 @@ const simplifyTypeAndExtension = (chordType, extension) => {
 }
 
 export const simplifyAlterationsAndAugmentations = (chordType, alteration, augmentation) => {
-  if (ChordType.HALF_DIMINISHED) {
-    return augmentation;
-  }
   return chordType === ChordType.DOMINANT ? `${alteration}${augmentation}` : augmentation;
 }
 
