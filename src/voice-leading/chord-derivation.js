@@ -56,16 +56,11 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
   const majorSeventh = Intervals.third(intervals);
   const minorSeventh = Intervals.minorSeventh(intervals);
 
-  const majorSecond = Intervals.second(intervals);
   const majorSixth = Intervals.sixth(intervals);
-  const minorSixth = Intervals.minorSixth(intervals);
-
   const majorNinth = Intervals.ninth(intervals);
   const perfectEleventh = Intervals.eleventh(intervals);
   const majorThirteenth = Intervals.thirteenth(intervals);
 
-  const fourth = Intervals.fourth(intervals);
-  const fifth = Intervals.fifth(intervals);
   if (triadType === TriadType.AUGMENTED) {
     if (minorSeventh) {
       return 'aug7'
@@ -111,8 +106,8 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
       }
       return 'maj7';
     }
-    if (majorSixth) {
-      return 'maj6';
+    if (majorSixth || majorThirteenth) {
+      return '6';
     }
   }
 
@@ -129,49 +124,19 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
       }
       return 'min7';
     }
-    if (majorSixth) {
+    if (majorSixth || majorThirteenth) {
       return 'min6';
     }
   }
 
-  // Check if fifth is excluded from a major or minor chord
-  if (!triadType && !fifth) {
-    if (majorThird && majorSeventh) {
-      if (majorThirteenth && !isThirteenthChord(intervals)) {
-        return 'maj7add13'
-      }
-      if (perfectEleventh && !isEleventhChord(intervals)) {
-        return 'maj7add11'
-      }
-      if (Intervals.sharpEleventh(intervals)) {
-        return 'maj7#11'
-      }
-      if (majorNinth) {
-        return 'maj9'
-      }
-      return 'maj7';
-    }
-    if (minorThird && minorSeventh) {
-      if (majorThirteenth && !isThirteenthChord(intervals)) {
-        return 'min7add13'
-      }
-      if (perfectEleventh && !isEleventhChord(intervals)) {
-        return 'min7add11'
-      }
-      if (majorNinth) {
-        return 'min9'
-      }
-      return 'min7';
-    }
-    if (majorThird && minorSeventh) {
+  if (triadType === TriadType.SUSPENDED_SECOND || triadType === TriadType.SUSPENDED_FOURTH) {
+    if (minorSeventh) {  // All Dominant chords
       let dominantCode = '7';
       if (majorThirteenth) {
         dominantCode = '13'
-      }
-      if (perfectEleventh) {
+      } else if (perfectEleventh) {
         dominantCode = '11'
-      }
-      if (majorNinth) {
+      } else if (majorNinth) {
         dominantCode = '9'
       }
 
@@ -188,6 +153,76 @@ export const deriveExtensionFromIntervals = (intervals = []) => {
         return `${dominantCode}#9`
       }
       return dominantCode;
+    }
+  }
+
+  const fifth = Intervals.fifth(intervals);
+  // Check if fifth is excluded from a major or minor chord
+  if (!triadType && !fifth) {
+    if (majorThird) {
+      // maj7/9/11/13 Chords
+      if (majorSeventh) {
+        if (majorThirteenth && !isThirteenthChord(intervals)) {
+          return 'maj13';
+        }
+        if (perfectEleventh && !isEleventhChord(intervals)) {
+          return 'maj11';
+        }
+        if (Intervals.sharpEleventh(intervals)) {
+          return 'maj7#11'
+        }
+        if (majorNinth) {
+          return 'maj9'
+        }
+        return 'maj7';
+      } else if (minorSeventh) {  // All Dominant chords
+        let dominantCode = '7';
+        if (majorThirteenth) {
+          dominantCode = '13'
+        } else if (perfectEleventh) {
+          dominantCode = '11'
+        } else if (majorNinth) {
+          dominantCode = '9'
+        }
+
+        if (Intervals.sharpEleventh(intervals)) {
+          return `${dominantCode}#11`
+        }
+        if (Intervals.minorThirteenth(intervals)) {
+          return `${dominantCode}b13`
+        }
+        if (Intervals.minorNinth(intervals)) {
+          return `${dominantCode}b9`
+        }
+        if (Intervals.sharpNinth(intervals)) {
+          return `${dominantCode}#9`
+        }
+        return dominantCode;
+      } else if (majorSixth) {
+        return '6';
+      } else {
+        if (majorThirteenth) {
+          return 'add13';
+        }
+        if (perfectEleventh) {
+          return 'add11';
+        }
+        if (majorNinth) {
+          return 'add9';
+        }
+      }
+    }
+    if (minorThird && minorSeventh) {
+      if (majorThirteenth && !isThirteenthChord(intervals)) {
+        return 'min7add13'
+      }
+      if (perfectEleventh && !isEleventhChord(intervals)) {
+        return 'min7add11'
+      }
+      if (majorNinth) {
+        return 'min9'
+      }
+      return 'min7';
     }
   }
 
