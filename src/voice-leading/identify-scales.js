@@ -48,7 +48,6 @@ export const getParentMajor = (scale) => {
 
 export const getScaleNamesByNotes = (notes = [], exact = false, tonic = null) => {
     const normalizedNotes = notes.map((note) => note.replace(/\d+/g, ''));
-    console.log('Normalized Notes', normalizedNotes)
     if (tonic) {
         return Scale.detect(normalizedNotes, { tonic, match: exact ? 'exact' : 'fit' });
     }
@@ -58,7 +57,14 @@ export const getScaleNamesByNotes = (notes = [], exact = false, tonic = null) =>
 export const getScaleInfoByName = (scaleName) => {
     const parentScale = Scale.get(scaleName);
     const parentMajor = getParentMajor(parentScale);
-    return parentMajor ? parentMajor : parentScale;
+
+    const output = parentMajor ? parentMajor : parentScale
+    const notes = parentScale.notes.map(note => Note.enharmonic(note));
+
+    return {
+      ...output,
+      notes
+    };
 }
 
 export const getScaleTriadsByNotes = (notes = []) => {
@@ -108,14 +114,11 @@ const convertIntervalToScaleAlteration = (interval) => {
 }
 
 export const getScalesMatchingChords = (chords = [], lessThanEightNotes = true) => {
-  console.log('Chords', chords)
   const noteSet = new Set();
   chords.forEach((chord) => {
     const chordNotes = chord.notes.forEach((note) => noteSet.add(note.replace(/\d/g, '')));
     return chordNotes
   })
-
-  console.log('Note Set', noteSet);
 
   const approximateScales = getScaleNamesByNotes([...noteSet], false).map(scaleName => getScaleInfoByName(scaleName));
   return approximateScales.filter((scale) => {

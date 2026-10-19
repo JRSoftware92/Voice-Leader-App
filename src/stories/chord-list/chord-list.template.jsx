@@ -4,6 +4,7 @@ import { Chord } from "tonal";
 import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 
 import {
+  getChordInfoByName,
   identifyPossibleChords
 } from "../../voice-leading/identify-chords";
 import ChordList from "../../components/chord-list/ChordList.tsx";
@@ -13,7 +14,7 @@ export const ChordListTemplate = () => {
   const [selectedChord, setSelectedChord] = useState(null);
 
   const chordNames = identifyPossibleChords(notesArr);
-  const chords = chordNames.map((name) => Chord.get(name));
+  const chords = chordNames.map((name) => getChordInfoByName(name));
 
   const onKeyToggle = (id) => {
     if (notesArr.includes(id)) {

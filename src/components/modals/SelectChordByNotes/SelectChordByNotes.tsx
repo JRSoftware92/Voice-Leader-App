@@ -18,6 +18,7 @@ import {
 import type { Chord as ChordType } from "../../../types/Chord.ts";
 
 import {
+    getChordInfoByName,
     identifyPossibleChords,
 } from "../../../voice-leading/identify-chords.js";
 
@@ -51,7 +52,7 @@ export const ScaleSelectionModal = ({
     const [selectedId, setSelectedId] = React.useState<string | undefined>(undefined)
 
     const chordNames = identifyPossibleChords(notes);
-    const chords = chordNames?.map((chordName) => Chord.get(chordName));
+    const chords = chordNames?.map((chordName) => getChordInfoByName(chordName));
 
     const handleCancel = () => {
         setOpen(false)

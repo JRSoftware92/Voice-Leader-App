@@ -13,7 +13,7 @@ export const identifyChordByNotes = (notes = []) => {
 }
 
 export const identifyPossibleChords = (notes = []) => {
-    return Chord.detect(notes);
+  return Chord.detect(notes);
 }
 
 export const deriveChordFromRootAndDegrees = (rootNote = "C4", intervals = []) => {
@@ -34,10 +34,13 @@ export const getChordInfoByName = (name) => {
 
         const quality = getChordQualityFromInfo(chord);
         const qualitySymbol = getShortChordSymbolByQuality(chord);
+
+        const notes = chord.notes.map(note => Note.enharmonic(note));
         return {
             ...chord,
             quality,
             qualitySymbol,
+            notes,
         };
     }
     catch (e) {
