@@ -16,8 +16,6 @@ export const ChordListTemplate = () => {
   const chordNames = identifyPossibleChords(notesArr);
   const chords = chordNames.map((name) => getChordInfoByName(name));
 
-  console.log(getHarmonicIntervalsOfNotes(notesArr, notesArr[0]))
-
   const onKeyToggle = (id) => {
     if (notesArr.includes(id)) {
       setNotes(notesArr.filter((val) => val !== id));
