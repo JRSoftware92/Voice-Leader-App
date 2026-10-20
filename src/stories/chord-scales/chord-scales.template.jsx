@@ -11,13 +11,13 @@ import ChordList from "../../components/chord-list/ChordList.tsx";
 import ScaleList from "../../components/scale-list/ScaleList.tsx";
 import {getPianoSampler, playChordSampler} from "../../utils/music.js";
 import {getScalesMatchingChords} from "../../voice-leading/identify-scales.js";
+import {getPossibleChordsByNotes} from "../../voice-leading/chord-derivation.js";
 
 export const ChordListTemplate = () => {
   const [notesArr, setNotes] = useState(['C3', 'E3', 'G3', 'B3']);
   const [selectedChords, setSelectedChords] = useState([]);
 
-  const chordNames = identifyPossibleChords(notesArr);
-  const chords = chordNames.map((name) => getChordInfoByName(name));
+  const chords = getPossibleChordsByNotes(notesArr);
 
   const sampler = getPianoSampler();
 
@@ -45,6 +45,8 @@ export const ChordListTemplate = () => {
   }
 
   const matchingScales = getScalesMatchingChords(selectedChords, true);
+
+  console.log('Scales', matchingScales)
 
   return (
     <div className="flex flex-col items-center w-full">

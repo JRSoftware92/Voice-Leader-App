@@ -15,6 +15,19 @@ const MINOR_MAP = ['min', 'dim', 'maj', 'min', 'min', 'maj', 'maj'];
 const MINOR_ROMAN_NUMERALS = ['i', 'ii(dim)', 'III', 'iv', 'v', 'VI', 'VII']
 const ALL_MINOR_NUMERALS = ['i', 'bii', 'ii(dim)', 'bIII', 'III', 'iv', '#iv', 'v', 'bVI', 'VI', 'bVII', 'VII']
 
+const PARENT_MODES = ['major', 'melodic minor', 'harmonic minor']
+
+export const getParentScale = (scaleName) => {
+  // Get all modes relative to the given scale mode
+  const modes = Scale.modeNames(scaleName);
+  const parentModeIndex = modes.findIndex((mode) => PARENT_MODES.includes(mode[1]));
+  const actualIndex = parentModeIndex > -1 ? parentModeIndex : 0;
+  const parentScaleName = modes[actualIndex].join(' ');
+
+  console.log(scaleName, '--->', parentScaleName, ' | ', modes)
+  return Scale.get(parentScaleName);
+}
+
 export const getParentMajor = (scale) => {
   if (scale.empty) return null;
 
@@ -55,14 +68,11 @@ export const getScaleNamesByNotes = (notes = [], exact = false, tonic = null) =>
 }
 
 export const getScaleInfoByName = (scaleName) => {
-    const parentScale = Scale.get(scaleName);
-    const parentMajor = getParentMajor(parentScale);
-
-    const output = parentMajor ? parentMajor : parentScale
+    const parentScale = getParentScale(scaleName);
     const notes = parentScale.notes.map(note => Note.enharmonic(note));
 
     return {
-      ...output,
+      ...parentScale,
       notes
     };
 }
@@ -126,7 +136,7 @@ export const getScalesMatchingChords = (chords = [], lessThanEightNotes = true) 
       return scale.notes.length < 8;
     }
     return scale.notes.some(note => !noteSet.has(note));
-  })
+  }).sort((a, b) => a.name.length - b.name.length).sort((a, b) => b.notes.length - a.notes.length);
 }
 
 export const getRelativeScaleDegree = (tonic, targetNote)=> {
