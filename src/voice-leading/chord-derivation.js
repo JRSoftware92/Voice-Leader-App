@@ -209,7 +209,7 @@ export const deriveChordFromNotes = (notes = [], tonic = null) => {
     tonic: root,
     bass: notes[0],
     type: chordType.name,
-    baseType: chordType.name,
+    baseType: chordType.type,
     alterations: chordType.alterations,
     notes,
     intervals,
