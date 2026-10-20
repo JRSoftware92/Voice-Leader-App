@@ -33,10 +33,11 @@ const getTypeOfChord = (intervals) => {
   }
   if (fifth) {
     if (majorThird) {
-      if (minorSeventh) {
+      if (majorSeventh || !minorSeventh) {
+        return ChordType.MAJOR;
+      } else if (minorSeventh) {
         return ChordType.DOMINANT;
       }
-      return ChordType.MAJOR;
     }
     if (minorThird) {
       if (majorSeventh) {
@@ -88,10 +89,6 @@ const getExtensionForChord = (intervals) => {
 }
 
 const getAlterationsForChord = (intervals, exclude = []) => {
-  if (Intervals.fifth(intervals)) {
-    // Alterations are ignored if there's no perfect fifth anywhere in the chord
-    return '';
-  }
   if (Intervals.sharpNinth(intervals) && !exclude.includes('#9')) {
     return '#9';
   }
@@ -100,6 +97,9 @@ const getAlterationsForChord = (intervals, exclude = []) => {
   }
   if (Intervals.sharpEleventh(intervals) && !exclude.includes('#11')) {
     return '#11';
+  }
+  if (Intervals.sharpThirteenth(intervals) && !exclude.includes('#13')) {
+    return 'b13';
   }
   if (Intervals.minorThirteenth(intervals) && !exclude.includes('b13')) {
     return 'b13';
@@ -140,9 +140,6 @@ const simplifyTypeAndExtension = (chordType, extension) => {
     if (extension === '6') {
       return '6';
     }
-    if (!extension?.length) {
-      return '';
-    }
   }
   if (chordType === ChordType.SUSPENDED_SECOND || chordType === ChordType.SUSPENDED_FOURTH) {
     return `${extension}${chordType}`;
@@ -169,14 +166,11 @@ const simplifyTypeAndExtension = (chordType, extension) => {
 }
 
 export const simplifyAlterationsAndAugmentations = (chordType, fullTypeString, alteration, augmentation) => {
-  if (chordType === ChordType.SUSPENDED_SECOND || chordType === ChordType.SUSPENDED_FOURTH) {
+  if (chordType === ChordType.SUSPENDED_SECOND || chordType === ChordType.SUSPENDED_FOURTH || chordType === ChordType.MAJOR) {
     return `${alteration}${augmentation}`;
   }
   if (chordType === ChordType.DOMINANT) {
     return alteration;
-  }
-  if (chordType === ChordType.MAJOR && !fullTypeString?.length && (augmentation?.length || alteration?.length)) {
-    return `${chordType}${augmentation}${alteration}`
   }
 
   return `${augmentation}`;

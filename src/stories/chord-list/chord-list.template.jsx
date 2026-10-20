@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Chord, Note} from "tonal";
+import {Note} from "tonal";
 
 import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 

@@ -64,7 +64,7 @@ export const normalizeIntervalToTwoOctaves = (intervalName) => {
 const hasMajorThird = intervals => intervals.includes('3M') || intervals.includes('10M');
 const hasMinorThird = intervals => intervals.includes('3m');
 const hasMajorSeventh = intervals => intervals.includes('7M') || intervals.includes('14M')
-const hasMinorSeventh = intervals => intervals.includes('7m') || intervals.includes('14m')
+const hasMinorSeventh = intervals => intervals.includes('7m');
 
 const hasRoot = intervals => intervals.includes('1P') || intervals.includes('8P') || intervals.includes('15P')
 const hasPerfectFifth = intervals => intervals.includes('5P') || intervals.includes('12P')
@@ -83,6 +83,7 @@ const hasEleventh = intervals => intervals.includes('11P');
 
 const hasMajorSixth = intervals => intervals.includes('6M');
 const hasMajorThirteenth = intervals => intervals.includes('13M');
+const hasSharpThirteenth = intervals => intervals.includes('14m');
 
 const hasMinorSecond = intervals => intervals.includes('2m');
 const hasMinorNinth = intervals => intervals.includes('9m');
@@ -109,6 +110,7 @@ export const INTERVAL_CHECKER = {
   thirteenth: hasMajorThirteenth,
   sharpEleventh: hasSharpEleventh,
   sharpNinth: hasSharpNinth,
+  sharpThirteenth: hasSharpThirteenth,
   minorThirteenth: hasMinorThirteen,
   altered: hasAlteredDegree,
 }
