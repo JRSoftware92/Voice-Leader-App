@@ -2,7 +2,7 @@ import uniq from 'lodash/uniq';
 
 import {
   convertIntervalsToScaleDegrees,
-  getHarmonicIntervalsOfNotes,
+  getHarmonicIntervalsOfNotes, intervalToDegree,
   normalizeIntervalToTwoOctaves
 } from "./identify-intervals.js";
 import {ChordType} from "../types/Chord.ts";
@@ -65,7 +65,7 @@ const getTypeOfChord = (intervals) => {
     }
   }
 
-  return '';
+  return '?';
 }
 
 const getExtensionForChord = (intervals) => {
@@ -87,18 +87,28 @@ const getExtensionForChord = (intervals) => {
   return '';
 }
 
-const getAlterationsForChord = (intervals) => {
-  if (Intervals.sharpNinth(intervals)) {
+const getAlterationsForChord = (intervals, exclude = []) => {
+  if (Intervals.fifth(intervals)) {
+    // Alterations are ignored if there's no perfect fifth anywhere in the chord
+    return '';
+  }
+  if (Intervals.sharpNinth(intervals) && !exclude.includes('#9')) {
     return '#9';
   }
-  if (Intervals.minorNinth(intervals)) {
+  if (Intervals.minorNinth(intervals) && !exclude.includes('b9')) {
     return 'b9'
   }
-  if (Intervals.sharpEleventh(intervals)) {
+  if (Intervals.sharpEleventh(intervals) && !exclude.includes('#11')) {
     return '#11';
   }
-  if (Intervals.minorThirteenth(intervals)) {
+  if (Intervals.minorThirteenth(intervals) && !exclude.includes('b13')) {
     return 'b13';
+  }
+  if (Intervals.augFifth(intervals) && !exclude.includes('#5')) {
+    return '#5';
+  }
+  if (Intervals.dimFifth(intervals) && !exclude.includes('b5')) {
+    return '#4';
   }
   return '';
 }
@@ -107,10 +117,10 @@ const getAugmentationsForChord = (intervals, exclude = []) => {
   if (Intervals.thirteenth(intervals) && !exclude.includes('13')) {
     return 'add13';
   }
-  if (Intervals.eleventh(intervals) && !exclude.includes('11')) {
+  if (Intervals.eleventh(intervals) && !exclude.includes('11') && !exclude.includes('13')) {
     return 'add11';
   }
-  if (Intervals.ninth(intervals) && !exclude.includes('9')) {
+  if (Intervals.ninth(intervals) && !exclude.includes('9') && !exclude.includes('11') && !exclude.includes('13')) {
     return 'add9';
   }
   if (Intervals.sixth(intervals) && !exclude.includes('6')) {
@@ -128,7 +138,7 @@ const getAugmentationsForChord = (intervals, exclude = []) => {
 const simplifyTypeAndExtension = (chordType, extension) => {
   if (chordType === ChordType.MAJOR) {
     if (extension === '6') {
-      return extension;
+      return '6';
     }
     if (!extension?.length) {
       return '';
@@ -158,40 +168,40 @@ const simplifyTypeAndExtension = (chordType, extension) => {
   return `${chordType}${extension}`;
 }
 
-export const simplifyAlterationsAndAugmentations = (chordType, alteration, augmentation) => {
-  if (chordType === ChordType.DOMINANT || chordType === ChordType.SUSPENDED_SECOND || chordType === ChordType.SUSPENDED_FOURTH) {
-    return `${alteration}${augmentation}`
+export const simplifyAlterationsAndAugmentations = (chordType, fullTypeString, alteration, augmentation) => {
+  if (chordType === ChordType.SUSPENDED_SECOND || chordType === ChordType.SUSPENDED_FOURTH) {
+    return `${alteration}${augmentation}`;
   }
-  return augmentation;
+  if (chordType === ChordType.DOMINANT) {
+    return alteration;
+  }
+  if (chordType === ChordType.MAJOR && !fullTypeString?.length && (augmentation?.length || alteration?.length)) {
+    return `${chordType}${augmentation}${alteration}`
+  }
+
+  return `${augmentation}`;
 }
 
 export const deriveTypeFromIntervals = (intervals) => {
   const chordType = getTypeOfChord(intervals);
   const extension = getExtensionForChord(intervals);
-  const alteration = getAlterationsForChord(intervals);
-  const augmentation = getAugmentationsForChord(intervals, [extension, alteration]);
+
+  const bassDegree = intervalToDegree(intervals[0]);
+  const alteration = getAlterationsForChord(intervals, [extension, bassDegree]);
+  const augmentation = getAugmentationsForChord(intervals, [extension, alteration, bassDegree]);
 
   const simplifiedType = simplifyTypeAndExtension(chordType, extension);
-  const simplifiedAdditions = simplifyAlterationsAndAugmentations(chordType, alteration, augmentation)
+  const simplifiedAdditions = simplifyAlterationsAndAugmentations(chordType, extension, alteration, augmentation)
 
   return `${simplifiedType}${simplifiedAdditions}`;
 }
 
-// FIXME - Degrees are wrong - intervals going backwards seem to be incorrect
 export const deriveChordFromNotes = (notes = [], tonic = null) => {
   const root = tonic || notes[0];
   const harmonicIntervals = getHarmonicIntervalsOfNotes(notes, root);
   const normalizedIntervals = harmonicIntervals.map((interval) => normalizeIntervalToTwoOctaves(interval));
   const intervals = uniq(normalizedIntervals);
-  const chordType = deriveTypeFromIntervals(intervals);
-
-  console.groupCollapsed('Interval Check', root, chordType);
-  console.log('Intervals', intervals);
-  console.log('------')
-  console.log('Harmonic step', harmonicIntervals);
-  console.log('Normalization', normalizedIntervals)
-  console.log('Notes', notes);
-  console.groupEnd();
+  const chordType = deriveTypeFromIntervals(intervals, notes[0]);
 
   const lowestNoteDifferent = notes[0].replace(/\d/g, '') !== root.replace(/\d/g, '') && tonic !== null;
 

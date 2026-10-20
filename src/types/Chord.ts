@@ -6,7 +6,7 @@ export type Chord = {
 }
 export enum ChordType {
     MAJOR = 'maj',
-    MINOR = 'min',
+    MINOR = 'm',
     MAJOR_MINOR = 'm/M',
     SUSPENDED_SECOND = 'sus2',
     SUSPENDED_FOURTH = 'sus4',

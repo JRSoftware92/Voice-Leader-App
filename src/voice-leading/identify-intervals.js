@@ -7,7 +7,7 @@ const INTERVAL_TO_SCALE_DEGREE = {
   '3m': 'b3',
   '3M': '3',
   '4P': '4',
-  '5d': '#4',
+  '5d': 'b5',
   '5P': '5',
   '6m': '#5',
   '6M': '6',
@@ -27,6 +27,8 @@ const INTERVAL_TO_SCALE_DEGREE = {
   '14M': '7',
   '15P': '1',
 }
+
+export const intervalToDegree = (interval) => INTERVAL_TO_SCALE_DEGREE[interval];
 
 export const convertIntervalsToScaleDegrees = (intervals) => intervals.map(interval => INTERVAL_TO_SCALE_DEGREE[interval])
 

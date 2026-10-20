@@ -7,7 +7,6 @@ import type {Chord} from "../../types/Chord.ts";
 import {Button} from "../ui/button.tsx";
 import { getCircleOfFifthColorForNote } from '../../utils/colors';
 import NoteList from "../note-list/NoteList.tsx";
-import {getScaleDegreePatternOfChord} from "../../voice-leading/identify-chords";
 
 
 type ChordListItemProps = {
@@ -44,8 +43,6 @@ export const ChordListItem = ({ chord, scaleDegree, scaleTonic, onClick, onDelet
     const tonic = chord?.tonic ? chord.tonic.replace(/\d/g, '') : null;
     const tonicColor = getCircleOfFifthColorForNote(tonic);
 
-    const degrees = tonic ? getScaleDegreePatternOfChord(chord.notes, scaleTonic || tonic) : [];
-
     return (
         <div className={classNames("pb-4 mb-2 flex flex-col justify-center items-center border border-solid rounded-sm", {
             'cursor-pointer': hasClickFunction,
@@ -75,8 +72,8 @@ export const ChordListItem = ({ chord, scaleDegree, scaleTonic, onClick, onDelet
                     ) : null
                 }
             </div>
-            <span className="font-bold">{chord.symbol}</span>
-            <span>{degrees?.join(', ')}</span>
+            <span className="font-bold wrap-break-word p-2">{chord.symbol}</span>
+            <span>{chord.degrees?.join(', ')}</span>
             <OverlapList notes={chord.notes} />
         </div>
     )
