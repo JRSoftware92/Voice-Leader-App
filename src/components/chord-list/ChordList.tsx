@@ -41,9 +41,9 @@ export const ChordList = ({ scale, selectedChordSymbol, onClick, onDelete, chord
             {
                 chordsWithScaleDegrees?.map((chord: ChordWithScaleDegrees) => (
                     <ChordListItem
-                        key={chord.symbol}
+                        key={chord.name}
                         chord={chord}
-                        selected={chord.symbol === selectedChordSymbol}
+                        selected={chord.name === selectedChordSymbol}
                         scaleDegree={chord.romanDegree}
                         scaleTonic={tonicNote}
                         onClick={onClick}

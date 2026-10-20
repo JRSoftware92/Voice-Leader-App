@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
-import {Chord, transpose} from "tonal";
+import {Note, transpose} from "tonal";
 
 import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
 
-import {
-  getChordInfoByName,
-  identifyPossibleChords
-} from "../../voice-leading/identify-chords";
 import ChordList from "../../components/chord-list/ChordList.tsx";
 import ScaleList from "../../components/scale-list/ScaleList.tsx";
 import {getPianoSampler, playChordSampler} from "../../utils/music.js";
@@ -25,7 +21,11 @@ export const ChordListTemplate = () => {
     if (notesArr.includes(id)) {
       setNotes(notesArr.filter((val) => val !== id));
     } else {
-      setNotes([...notesArr, id]);
+      const newArr = [...notesArr, id];
+      const sortedNotes = newArr.sort((a, b) => {
+        return Note.midi(a) - Note.midi(b);
+      });
+      setNotes(sortedNotes);
     }
   }
 
@@ -45,8 +45,6 @@ export const ChordListTemplate = () => {
   }
 
   const matchingScales = getScalesMatchingChords(selectedChords, true);
-
-  console.log('Scales', matchingScales)
 
   return (
     <div className="flex flex-col items-center w-full">

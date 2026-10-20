@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import {Note} from "tonal";
 import uniqBy from 'lodash/uniqBy';
 
 import PianoKeyboard from '../../components/keyboard/PianoKeyboard.tsx';
@@ -26,7 +27,11 @@ export const ScaleListTemplate = ({ lessThanSeven = true }) => {
     if (notesArr.includes(id)) {
       setNotes(notesArr.filter((val) => val !== id));
     } else {
-      setNotes([...notesArr, id]);
+      const newArr = [...notesArr, id];
+      const sortedNotes = newArr.sort((a, b) => {
+        return Note.midi(a) - Note.midi(b);
+      });
+      setNotes(sortedNotes);
     }
   }
 

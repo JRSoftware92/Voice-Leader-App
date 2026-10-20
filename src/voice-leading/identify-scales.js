@@ -5,6 +5,7 @@ import reduce from "lodash/reduce";
 import union from "lodash/union";
 
 import {identifyChordByNotes} from "./identify-chords";
+import {deriveChordFromNotes, getPossibleChordsByNotes} from "./chord-derivation.js";
 
 const MAJOR_MAP = ['maj', 'min', 'min', 'maj', 'maj', 'min', 'dim'];
 const MAJOR_ROMAN_NUMERALS = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii(dim)']
@@ -24,7 +25,6 @@ export const getParentScale = (scaleName) => {
   const actualIndex = parentModeIndex > -1 ? parentModeIndex : 0;
   const parentScaleName = modes[actualIndex].join(' ');
 
-  console.log(scaleName, '--->', parentScaleName, ' | ', modes)
   return Scale.get(parentScaleName);
 }
 
@@ -86,7 +86,7 @@ export const getScaleTriadsByNotes = (notes = []) => {
     const fifth = notes[(i + 4) % len];
 
     // Detect the chord name from the accumulated notes
-    const detected = Chord.detect([root, third, fifth]);
+    const detected = getPossibleChordsByNotes([root, third, fifth]);
     return detected[0] || `${root} (unknown)`;
   });
 }
@@ -101,7 +101,8 @@ export const getScaleSeventhsByNotes = (notes = []) => {
     const seventh = notes[(i + 6) % len];
 
     // Detect the chord name from the accumulated notes
-    const detected = Chord.detect([root, third, fifth, seventh]);
+    // const detected = Chord.detect([root, third, fifth, seventh]);
+    const detected = getPossibleChordsByNotes([root, third, fifth, seventh]);
     return detected[0] || `${root} (unknown)`;
   });
 }

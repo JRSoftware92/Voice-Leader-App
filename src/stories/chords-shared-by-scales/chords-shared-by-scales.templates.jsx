@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 
 import {Interval, Note, transpose} from "tonal";
 
-import intersection from "lodash/intersection";
+import uniqBy from "lodash/uniqBy";
 
 import ScaleList from "../../components/scale-list/ScaleList.tsx";
 import SelectScaleByNotes from "../../components/modals/SelectScaleByNotes/SelectScaleByNotes.tsx";
@@ -10,8 +10,9 @@ import ChordList from "../../components/chord-list/ChordList.tsx";
 import {getChordInfoByName} from "../../voice-leading/identify-chords.js";
 import PianoKeyboard from "../../components/keyboard/PianoKeyboard.tsx";
 import {getPianoSampler, playChordSampler} from "../../utils/music.js";
+import {getScaleChordsByNotes} from "../../voice-leading/identify-scales.js";
 
-export const ScaleListTemplate = () => {
+export const ScaleListTemplate = ({ useSevenths = false }) => {
   const [scales, setScales] = useState([]);
   const [selectedScale, setSelectedScale] = useState(null);
   const [open, setOpen] = useState(false);
@@ -27,7 +28,10 @@ export const ScaleListTemplate = () => {
   const onScaleSelected = useCallback((scale) => {
     setScales([
       ...scales,
-      scale
+      {
+        ...scale,
+        chords: getScaleChordsByNotes(scale.notes, useSevenths),
+      }
     ])
     setOpen(false);
   }, [scales])
@@ -36,13 +40,20 @@ export const ScaleListTemplate = () => {
     if (notesArr.includes(id)) {
       setNotes(notesArr.filter((val) => val !== id));
     } else {
-      setNotes([...notesArr, id]);
+      const newArr = [...notesArr, id];
+      const sortedNotes = newArr.sort((a, b) => {
+        return Note.midi(a) - Note.midi(b);
+      });
+      setNotes(sortedNotes);
     }
   }
 
-  const chordSets = scales.map((scale) => scale?.chords ? scale.chords : []);
-  const chordOverlap = intersection(...chordSets);
-  const chords = chordOverlap?.length ? chordOverlap.map((name) => getChordInfoByName(name)) : [];
+  const allChords = scales.flatMap((scale) => scale.chords);
+  const filteredChords = allChords.filter((chord) => {
+    const chordNotes = chord.notes;
+    return chordNotes.every((note) => scales.every((scale) => scale.notes.includes(note)));
+  });
+  const chords = uniqBy(filteredChords, (chord) => chord.name);
 
   const handleScaleClick = (scale) => {
     if (selectedScale?.name !== scale.name) {

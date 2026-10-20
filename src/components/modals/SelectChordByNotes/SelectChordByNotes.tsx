@@ -59,7 +59,7 @@ export const ScaleSelectionModal = ({
     }
 
     const handleAccept = () => {
-        const selectedItem = chords.find((chord: ChordType) => chord.symbol === selectedId) || null
+        const selectedItem = chords.find((chord: ChordType) => chord.name === selectedId) || null
         onAccept(selectedItem)
     }
 
@@ -79,12 +79,12 @@ export const ScaleSelectionModal = ({
                 <ScrollArea className="flex-1 pr-4 border rounded-md max-h-[350px]">
                     <div className="flex flex-col p-1 gap-1">
                         {chords.map((chord: ChordType) => {
-                            const isSelected = selectedId === chord.symbol
+                            const isSelected = selectedId === chord.name
                             return (
                                 <button
-                                    key={chord.symbol}
+                                    key={chord.name}
                                     type="button"
-                                    onClick={() => setSelectedId(chord.symbol)}
+                                    onClick={() => setSelectedId(chord.name)}
                                     className={cn(
                                         "flex items-center justify-between w-full text-left px-3 py-2.5 text-sm rounded-sm transition-colors",
                                         "hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:bg-accent",
@@ -94,7 +94,7 @@ export const ScaleSelectionModal = ({
                                     )}
                                 >
                                     <div className="flex flex-col gap-0.5">
-                                        <span className="text-foreground">{chord.symbol}</span>
+                                        <span className="text-foreground">{chord.name}</span>
                                         {chord.notes && (
                                             <span className="text-xs text-muted-foreground font-normal">
                                                 {chord.notes}
