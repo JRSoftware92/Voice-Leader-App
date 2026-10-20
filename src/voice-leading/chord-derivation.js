@@ -176,13 +176,34 @@ export const simplifyAlterationsAndAugmentations = (chordType, fullTypeString, a
   return `${augmentation}`;
 }
 
+const getExclusionListForType = (chordType) => {
+  if (chordType === ChordType.AUGMENTED) {
+    return ['#5'];
+  }
+  if (chordType === ChordType.DIMINISHED) {
+    return ['b5', '#4', '#11'];
+  }
+  if (chordType === ChordType.SUSPENDED_FOURTH) {
+    return ['4'];
+  }
+  if (chordType === ChordType.SUSPENDED_SECOND) {
+    return ['2'];
+  }
+  if (chordType === ChordType.MINOR) {
+    return ['#9', '#13'];
+  }
+  return [];
+}
+
 export const deriveTypeFromIntervals = (intervals) => {
   const chordType = getTypeOfChord(intervals);
   const extension = getExtensionForChord(intervals);
 
   const bassDegree = intervalToDegree(intervals[0]);
-  const alteration = getAlterationsForChord(intervals, [extension, bassDegree]);
-  const augmentation = getAugmentationsForChord(intervals, [extension, alteration, bassDegree]);
+
+  const exclude = getExclusionListForType(chordType);
+  const alteration = getAlterationsForChord(intervals, [...exclude, extension, bassDegree]);
+  const augmentation = getAugmentationsForChord(intervals, [...exclude, extension, alteration, bassDegree]);
 
   const simplifiedType = simplifyTypeAndExtension(chordType, extension);
   const simplifiedAdditions = simplifyAlterationsAndAugmentations(chordType, extension, alteration, augmentation)
