@@ -50,7 +50,9 @@ export const ScaleSelectionModal = ({
     const [selectedId, setSelectedId] = React.useState<string | undefined>(undefined)
 
     const scaleNames = getScaleNamesByNotes(notes);
-    const scales = scaleNames.map((name: string) => getScaleInfoByName(name));
+    const scales = scaleNames.map((name: string) => getScaleInfoByName(name))
+        .filter((scale) => scale.notes.length < 8)
+        .sort((a, b) => a.name.length - b.name.length).sort((a, b) => b.notes.length - a.notes.length);;
     const scalesWithChords = scales.map((scale: Scale) => ({
         ...scale,
         chords: getScaleChordsByNotes(scale.notes, true),
