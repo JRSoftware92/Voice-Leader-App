@@ -11,12 +11,14 @@ import {
 import ScaleList from "../../components/scale-list/ScaleList.tsx";
 import {getPianoSampler, playNotesSampler} from "../../utils/music.js";
 
-export const ScaleListTemplate = () => {
+export const ScaleListTemplate = ({ lessThanSeven = true }) => {
   const [notesArr, setNotes] = useState(['C3', 'E3', 'G3', 'B3']);
   const sampler = getPianoSampler();
 
   const scaleNames = getScaleNamesByNotes(notesArr);
-  const scales = scaleNames.map((name) => getScaleInfoByName(name));
+  const scales = scaleNames.map((name) => getScaleInfoByName(name))
+    .sort((a, b) => a.name.length - b.name.length).sort((a, b) => b.notes.length - a.notes.length)
+    .filter((scale) => (lessThanSeven || scale.notes.length < 8));
   const deduplicatedScales = uniqBy(scales, (scale) => scale.name);
 
 
