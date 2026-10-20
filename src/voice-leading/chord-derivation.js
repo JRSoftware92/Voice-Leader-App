@@ -187,7 +187,7 @@ export const deriveTypeFromIntervals = (intervals) => {
   const simplifiedType = simplifyTypeAndExtension(chordType, extension);
   const simplifiedAdditions = simplifyAlterationsAndAugmentations(chordType, extension, alteration, augmentation)
 
-  return `${simplifiedType}${simplifiedAdditions}`;
+  return { name: `${simplifiedType}${simplifiedAdditions}`, type: simplifiedType, alterations: simplifiedAdditions};
 }
 
 export const deriveChordFromNotes = (notes = [], tonic = null) => {
@@ -200,7 +200,7 @@ export const deriveChordFromNotes = (notes = [], tonic = null) => {
   const lowestNoteDifferent = notes[0].replace(/\d/g, '') !== root.replace(/\d/g, '') && tonic !== null;
 
   const slashSuffix = lowestNoteDifferent ? ` / ${notes[0].replace(/\d/g, '')}` : '';
-  const name = `${root.replace(/\d/g, '')}${chordType}${slashSuffix}`;
+  const name = `${root.replace(/\d/g, '')}${chordType.name}${slashSuffix}`;
   return {
     unknown: name.includes('?'),
     name,
@@ -208,7 +208,9 @@ export const deriveChordFromNotes = (notes = [], tonic = null) => {
     root,
     tonic: root,
     bass: notes[0],
-    type: chordType,
+    type: chordType.type.name,
+    baseType: chordType.type.name,
+    alterations: chordType.type.alterations,
     notes,
     intervals,
     degrees: convertIntervalsToScaleDegrees(intervals),

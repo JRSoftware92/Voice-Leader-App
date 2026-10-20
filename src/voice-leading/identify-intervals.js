@@ -73,10 +73,10 @@ const hasAugmentedFifth = intervals => intervals.includes('6m');
 const hasMinorSixth = intervals => hasAugmentedFifth(intervals);
 
 const hasDiminishedFifth = intervals => intervals.includes('5d');
-const hasSharpEleventh = intervals => intervals.includes('12d');
+const hasSharpEleventh = intervals => intervals.includes('12d') || intervals.includes('5d');
 const hasMinorThirteen = intervals => intervals.includes('13m');
 const hasMajorSecond = intervals => intervals.includes('2M');
-const hasMajorNinth = intervals => intervals.includes('9M');
+const hasMajorNinth = intervals => intervals.includes('9M') || intervals.includes('2m');
 const hasSharpNinth = intervals => intervals.includes('10m');
 const hasPerfectFourth = intervals => intervals.includes('4P');
 const hasEleventh = intervals => intervals.includes('11P');
